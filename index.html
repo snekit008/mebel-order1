@@ -26,32 +26,40 @@
   .mat-price { font-size: 0.9rem; color: var(--muted); }
   .mat-btn.active .mat-price { color: var(--accent); font-weight: bold; }
 
-  /* Сетка фото (строго 3 в ряд) */
+  /* Сетка фото */
   .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-  
   .color-item { 
     aspect-ratio: 1; border-radius: 8px; overflow: hidden; 
-    border: 3px solid transparent; cursor: pointer; position: relative;
-    background: #eee;
+    border: 3px solid transparent; cursor: pointer; position: relative; background: #eee;
   }
   .color-item.active { border-color: var(--accent); transform: scale(0.95); }
   .color-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .color-item.active .color-img { opacity: 0.8; }
-
   .color-name { text-align: center; margin-top: 10px; font-weight: 600; color: var(--accent); min-height: 1.2em;}
 
-  /* Полный список номеров цветов */
+  /* Список номеров */
   .color-list { 
     display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; 
     padding-top: 15px; border-top: 1px solid var(--border);
   }
   .color-list-item {
     padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px;
-    font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
-    background: #fff; white-space: nowrap;
+    font-size: 0.85rem; cursor: pointer; transition: all 0.2s; background: #fff; white-space: nowrap;
   }
   .color-list-item:hover { background: var(--tag-bg); }
   .color-list-item.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* === СТИЛИ ДЛЯ ДИЗАЙНА ИЗГОЛОВЬЯ === */
+  .design-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media(min-width: 480px) { .design-grid { grid-template-columns: repeat(3, 1fr); } }
+  
+  .design-btn {
+    padding: 12px 8px; border: 1px solid var(--border); border-radius: 8px;
+    background: #fff; text-align: center; cursor: pointer; transition: 0.2s;
+    font-size: 0.85rem; line-height: 1.3; color: var(--text);
+  }
+  .design-btn:hover { background: var(--tag-bg); }
+  .design-btn.active { border-color: var(--accent); background: var(--tag-bg); font-weight: 600; color: var(--accent); }
 
   .field { margin-bottom: 15px; }
   .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
@@ -63,28 +71,14 @@
   
   .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
   .btn-submit:disabled { opacity: 0.6; }
-  
   .success { display: none; text-align: center; padding: 3rem 1rem; }
 
-  /* === СТИЛИ ДЛЯ ЗУМА (УВЕЛИЧЕНИЯ ФОТО) === */
+  /* Зум фото */
   .zoom-modal {
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.95); /* Темный фон */
-    z-index: 1000; 
-    align-items: center; 
-    justify-content: center;
-    cursor: zoom-out; /* Курсор показывает, что можно закрыть */
-    padding: 20px;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+    z-index: 1000; align-items: center; justify-content: center; cursor: zoom-out; padding: 20px;
   }
-  .zoom-modal img {
-    max-width: 100%; 
-    max-height: 90vh; 
-    object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-  }
+  .zoom-modal img { max-width: 100%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -125,9 +119,16 @@
     </div>
   </div>
 
-  <!-- 4. Контакты -->
+  <!-- 4. Дизайн изголовья (НОВЫЙ БЛОК) -->
   <div class="card">
-    <div class="card-title">4. Ваши данные</div>
+    <div class="card-title">4. Дизайн изголовья</div>
+    <div class="design-grid" id="design-grid"></div>
+    <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-design-name">Стандарт</div>
+  </div>
+
+  <!-- 5. Контакты -->
+  <div class="card">
+    <div class="card-title">5. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
     <div class="field"><input type="tel" id="f-phone" placeholder="+7 (999) 000-00-00"></div>
     <div class="field"><textarea id="f-comment" rows="3" placeholder="Комментарий (адрес, этаж)"></textarea></div>
@@ -138,6 +139,7 @@
     <div class="sum-row"><span>Материал:</span> <span id="sum-mat">-</span></div>
     <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
+    <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Стандарт</span></div>
     <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-price">0 ₽</span></div>
   </div>
 
@@ -151,7 +153,7 @@
   <button class="btn-submit" onclick="location.reload()" style="background: transparent; border: 2px solid var(--accent); color: var(--accent);">Новый заказ</button>
 </div>
 
-<!-- Модальное окно для зума (скрыто по умолчанию) -->
+<!-- Модальное окно для зума -->
 <div class="zoom-modal" id="zoom-modal" onclick="closeZoom()">
   <img src="" alt="Zoom" id="zoom-img">
 </div>
@@ -164,21 +166,32 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ВСЕ ССЫЛКИ НА ФОТО
+// СПИСОК ДИЗАЙНОВ ИЗГОЛОВЬЯ
+// ==========================================
+const DESIGNS = [
+  'Геометрия',
+  'Стандарт',
+  'Заборчики',
+  'Дольки 6 штук',
+  'Дольки 8 штук',
+  'Каретная стяжка со стразами',
+  'Каретная стяжка с пуговицами',
+  'Облачко',
+  'Облачко более закругленное'
+];
+
+// ==========================================
+// ССЫЛКИ НА ФОТО ТКАНЕЙ
 // ==========================================
 const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
 const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
 const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
-
 const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg';
-
 const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg';
 const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg';
-
 const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
 const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
 
-// Структура данных
 const DATA = {
   relax: {
     id: 'relax', name: 'Антивандальный (Relax)', price: 1000,
@@ -209,7 +222,6 @@ const DATA = {
       { num: 'B-25', name: 'Belisimmo 25', img: BELISIMMO_1 }, { num: 'B-26', name: 'Belisimmo 26', img: BELISIMMO_1 },
       { num: 'B-27', name: 'Belisimmo 27', img: BELISIMMO_1 }, { num: 'B-28', name: 'Belisimmo 28', img: BELISIMMO_1 },
       { num: 'B-35', name: 'Belisimmo 35', img: BELISIMMO_1 },
-      
       { num: 'Bo-1', name: 'Boston 1', img: BOSTON_1 }, { num: 'Bo-2', name: 'Boston 2', img: BOSTON_2 },
       { num: 'Bo-3', name: 'Boston 3', img: BOSTON_1 }, { num: 'Bo-4', name: 'Boston 4', img: BOSTON_2 },
       { num: 'Bo-5', name: 'Boston 5', img: BOSTON_1 }, { num: 'Bo-6', name: 'Boston 6', img: BOSTON_2 },
@@ -232,10 +244,11 @@ const DATA = {
   }
 };
 
-let state = { mat: 'relax', colorName: '', size: '140x200' };
+let state = { mat: 'relax', colorName: '', size: '140x200', design: 'Стандарт' };
 
 function init() {
   renderMaterials();
+  renderDesigns();
   selectMaterial('relax');
 }
 
@@ -252,15 +265,40 @@ function renderMaterials() {
   });
 }
 
+// Рендер кнопок дизайна изголовья
+function renderDesigns() {
+  const grid = document.getElementById('design-grid');
+  grid.innerHTML = '';
+  DESIGNS.forEach(d => {
+    const btn = document.createElement('div');
+    btn.className = 'design-btn' + (d === state.design ? ' active' : '');
+    btn.textContent = d;
+    btn.onclick = () => selectDesign(d, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectDesign(name, btnElement) {
+  state.design = name;
+  document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('active'));
+  if(btnElement) btnElement.classList.add('active');
+  else {
+    // Если вызвано программно, ищем кнопку по тексту
+    document.querySelectorAll('.design-btn').forEach(b => {
+      if(b.textContent === name) b.classList.add('active');
+    });
+  }
+  document.getElementById('selected-design-name').textContent = name;
+  document.getElementById('sum-design').textContent = name;
+}
+
 function selectMaterial(id) {
   state.mat = id;
   document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`btn-${id}`).classList.add('active');
-  
   const matData = DATA[id];
   document.getElementById('sum-mat').textContent = matData.name;
   document.getElementById('sum-price').textContent = matData.price > 0 ? `+${matData.price} ₽` : '0 ₽';
-  
   renderColors(matData.colors);
 }
 
@@ -269,23 +307,15 @@ function renderColors(colors) {
   const list = document.getElementById('color-list');
   grid.innerHTML = '';
   list.innerHTML = '';
-  
   selectColor(`${colors[0].num} - ${colors[0].name}`);
   
-  // Показываем только уникальные фото (максимум 3)
   const uniqueImages = [...new Set(colors.map(c => c.img))].slice(0, 3);
-  
   uniqueImages.forEach((imgSrc, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
-    // Добавляем onclick для открытия зума
     item.innerHTML = `<img src="${imgSrc}" class="color-img" alt="Color" loading="lazy">`;
-    
     item.onclick = () => {
-      // Открываем зум
       openZoom(imgSrc);
-      
-      // Также выбираем этот цвет (находим первый попавшийся с таким фото)
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
       item.classList.add('active');
       const firstColorWithImg = colors.find(c => c.img === imgSrc);
@@ -294,15 +324,12 @@ function renderColors(colors) {
     grid.appendChild(item);
   });
   
-  // Рендерим полный список номеров
   colors.forEach((c, index) => {
     const listItem = document.createElement('div');
     listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
-    const displayNum = c.num.replace('B-', '').replace('Bo-', '');
-    listItem.textContent = displayNum;
-    
+    listItem.textContent = c.num.replace('B-', '').replace('Bo-', '');
     listItem.onclick = (e) => {
-      e.stopPropagation(); // Чтобы клик не всплывал
+      e.stopPropagation();
       document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
       listItem.classList.add('active');
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
@@ -323,11 +350,9 @@ function updateSummary() {
   document.getElementById('sum-size').textContent = state.size;
 }
 
-// === ФУНКЦИИ ДЛЯ ЗУМА ===
 function openZoom(imgSrc) {
   const modal = document.getElementById('zoom-modal');
-  const img = document.getElementById('zoom-img');
-  img.src = imgSrc;
+  document.getElementById('zoom-img').src = imgSrc;
   modal.style.display = 'flex';
 }
 
@@ -346,7 +371,7 @@ async function sendOrder() {
   const matData = DATA[state.mat];
   const comment = document.getElementById('f-comment').value;
   
-  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n *Имя:* ${name}\n *Телефон:* ${phone}\n\n *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Доплата: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
+  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Доплата за ткань: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
   
   try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
