@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заказ кровати или матраса</title>
+<style>
+  :root {
+    --bg: #F7F5F2;
+    --surface: #FFFFFF;
+    --border: #E2DDD8;
+    --text: #1A1814;
+    --muted: #7A7570;
+    --accent: #2C2420;
+    --tag-bg: #EDE9E4;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); min-height: 100vh; }
+  header { background: var(--accent); color: #fff; padding: 2rem 1.5rem 1.5rem; text-align: center; }
+  header h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 600; letter-spacing: -.02em; margin-bottom: .4rem; }
+  header p { font-size: .95rem; opacity: .75; }
+  .container { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tab { padding: 8px 16px; border: 1px solid var(--border); border-radius: 100px; font-size: .875rem; cursor: pointer; background: transparent; color: var(--text); transition: all .15s; font-family: inherit; }
+  .tab:hover { background: var(--tag-bg); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .size-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+  .size-btn { padding: 10px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: .8rem; cursor: pointer; background: transparent; color: var(--text); text-align: center; transition: all .15s; font-family: inherit; line-height: 1.4; }
+  .size-btn:hover { background: var(--tag-bg); }
+  .size-btn.active { border: 2px solid var(--accent); font-weight: 600; background: var(--tag-bg); }
+  .size-sub { display: block; font-size: .7rem; color: var(--muted); margin-top: 2px; }
+  .design-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media(max-width:480px) { .design-grid { grid-template-columns: repeat(2,1fr); } }
+  .design-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 8px; cursor: pointer; background: transparent; text-align: center; transition: all .15s; font-family: inherit; color: var(--text); }
+  .design-card:hover { background: var(--tag-bg); }
+  .design-card.active { border: 2px solid var(--accent); background: var(--tag-bg); }
+  .design-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .design-label { font-size: .8rem; font-weight: 600; display: block; }
+  .design-sub { font-size: .7rem; color: var(--muted); }
+  .color-palette { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+  .color-swatch { width: 38px; height: 38px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform .15s, border-color .15s; }
+  .color-swatch:hover { transform: scale(1.12); }
+  .color-swatch.active { border-color: var(--accent); transform: scale(1.15); }
+  .color-label { font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
+  .custom-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .custom-row span { font-size: .85rem; color: var(--muted); }
+  input[type=color] { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); cursor: pointer; padding: 2px; background: none; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:480px) { .row2 { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .field label { font-size: .8rem; color: var(--muted); font-weight: 500; }
+  input[type=text], input[type=tel], input[type=password], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: .9rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color .15s; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { height: 80px; resize: vertical; }
+  .extras { display: flex; flex-direction: column; gap: 10px; }
+  .extra-item { display: flex; align-items: center; gap: 10px; font-size: .9rem; cursor: pointer; }
+  .extra-item input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+  .summary { background: var(--tag-bg); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.25rem; font-size: .875rem; }
+  .summary-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+  .summary-row:last-child { border-bottom: none; font-weight: 600; }
+  .summary-key { color: var(--muted); flex-shrink: 0; }
+  .summary-val { text-align: right; }
+  .submit-btn { width: 100%; padding: 15px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s; }
+  .submit-btn:hover { opacity: .88; }
+  .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .type-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  .type-btn { padding: 12px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: .9rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--muted); font-family: inherit; transition: all .15s; text-align: center; }
+  .type-btn.active { border-color: var(--accent); color: var(--accent); background: var(--tag-bg); }
+  .error-msg { color: #C0392B; font-size: .8rem; margin-top: 4px; display: none; }
+  .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: middle; margin-right: 5px; border: 1px solid rgba(0,0,0,.15); }
+  .success-block { display: none; text-align: center; padding: 3rem 1rem; }
+  .success-block h2 { font-size: 1.5rem; margin-bottom: .5rem; }
+  .success-block p { color: var(--muted); font-size: .95rem; margin-bottom: 1.5rem; }
+  .reset-btn { padding: 12px 28px; background: transparent; color: var(--accent); border: 2px solid var(--accent); border-radius: var(--radius); font-size: .95rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+  /* Экран настройки */
+  .setup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
+  .setup-box { background: var(--surface); border-radius: var(--radius); padding: 2rem; max-width: 440px; width: 100%; }
+  .setup-box h2 { font-size: 1.2rem; margin-bottom: .5rem; }
+  .setup-box p { font-size: .875rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .setup-btn { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: .95rem; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: .75rem; }
+  .setup-note { font-size: .78rem; color: var(--muted); margin-top: .75rem; text-align: center; }
+  footer { text-align: center; padding: 1rem; font-size: .8rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Экран первоначальной настройки (показывается только если токен не сохранён) -->
+<div class="setup-overlay" id="setup-overlay">
+  <div class="setup-box">
+    <h2>⚙️ Настройка уведомлений</h2>
+    <p>Введите данные Telegram-бота, чтобы заказы приходили вам. Это делается один раз — данные сохранятся в браузере.</p>
+    <div class="field">
+      <label>Токен Telegram-бота</label>
+      <input type="password" id="setup-token" placeholder="1234567890:AAF...">
+      <span class="error-msg" id="e-token">Введите токен</span>
+    </div>
+    <div class="field">
+      <label>Ваш Chat ID</label>
+      <input type="text" id="setup-chatid" placeholder="5210823670">
+      <span class="error-msg" id="e-chatid">Введите Chat ID</span>
+    </div>
+    <button class="setup-btn" onclick="saveSetup()">Сохранить и начать</button>
+    <p class="setup-note">🔒 Данные хранятся только в вашем браузере и никуда не передаются</p>
+  </div>
+</div>
+
+<header>
+  <h1>🛏 Сборка вашей кровати</h1>
+  <p>Выберите параметры — мы свяжемся для подтверждения</p>
+</header>
+
+<div class="container">
+
+<div id="form-wrap">
+
+  <div class="card">
+    <div class="card-title">Что вы хотите заказать?</div>
+    <div class="type-switcher">
+      <button class="type-btn active" id="tb-bed" onclick="setType('bed')">🛏 Кровать</button>
+      <button class="type-btn" id="tb-mattress" onclick="setType('mattress')">💤 Матрас</button>
+    </div>
+  </div>
+
+  <div id="bed-section">
+    <div class="card">
+      <div class="card-title">Дизайн кровати</div>
+      <div class="design-grid">
+        <button class="design-card active" id="d-classic" onclick="setDesign('d-classic','Классика')"><div class="design-icon">🛏</div><span class="design-label">Классика</span><span class="design-sub">Прямые линии</span></button>
+        <button class="design-card" id="d-soft" onclick="setDesign('d-soft','Мягкое изголовье')"><div class="design-icon">🛋</div><span class="design-label">Мягкое</span><span class="design-sub">Мягкое изголовье</span></button>
+        <button class="design-card" id="d-platform" onclick="setDesign('d-platform','Платформа')"><div class="design-icon">📐</div><span class="design-label">Платформа</span><span class="design-sub">Низкий профиль</span></button>
+        <button class="design-card" id="d-round" onclick="setDesign('d-round','Круглая')"><div class="design-icon">⭕</div><span class="design-label">Круглая</span><span class="design-sub">Нестандартная</span></button>
+        <button class="design-card" id="d-storage" onclick="setDesign('d-storage','С ящиками')"><div class="design-icon">🗄</div><span class="design-label">С ящиками</span><span class="design-sub">Подъёмный мех.</span></button>
+        <button class="design-card" id="d-kids" onclick="setDesign('d-kids','Детская')"><div class="design-icon">🧸</div><span class="design-label">Детская</span><span class="design-sub">До 12 лет</span></button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Материал обивки</div>
+      <div class="tabs">
+        <button class="tab active" id="m-velvet" onclick="setMaterial('m-velvet','Велюр')">Велюр</button>
+        <button class="tab" id="m-eco" onclick="setMaterial('m-eco','Экокожа')">Экокожа</button>
+        <button class="tab" id="m-linen" onclick="setMaterial('m-linen','Рогожка')">Рогожка</button>
+        <button class="tab" id="m-jacquard" onclick="setMaterial('m-jacquard','Жаккард')">Жаккард</button>
+        <button class="tab" id="m-fabric" onclick="setMaterial('m-fabric','Ткань')">Ткань</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Цвет обивки</div>
+      <div class="color-palette" id="color-palette"></div>
+      <div class="color-label" id="color-label">Выбрано: Серый</div>
+      <div class="custom-row">
+        <span>Свой цвет:</span>
+        <input type="color" id="custom-color" value="#888780" oninput="setCustomColor(this.value)">
+        <span id="custom-hex" style="font-size:.8rem;color:var(--muted)"></span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Опции</div>
+      <div class="extras">
+        <label class="extra-item"><input type="checkbox" id="opt-storage"> Ящик для белья / подъёмный механизм</label>
+        <label class="extra-item"><input type="checkbox" id="opt-mattress"> Добавить матрас к кровати</label>
+        <label class="extra-item"><input type="checkbox" id="opt-legs"> Деревянные ножки (натуральный массив)</label>
+        <label class="extra-item"><input type="checkbox" id="opt-headboard"> Усиленное изголовье (кнопки/пуговицы)</label>
+      </div>
+    </div>
+  </div>
+
+  <div id="mattress-section" style="display:none">
+    <div class="card">
+      <div class="card-title">Тип матраса</div>
+      <div class="tabs" style="flex-wrap:wrap">
+        <button class="tab active" id="mt-spring" onclick="setMType('mt-spring','Пружинный (независимые)')">Пружинный</button>
+        <button class="tab" id="mt-foam" onclick="setMType('mt-foam','Беспружинный')">Беспружинный</button>
+        <button class="tab" id="mt-memory" onclick="setMType('mt-memory','Memory Foam')">Memory Foam</button>
+        <button class="tab" id="mt-latex" onclick="setMType('mt-latex','Латекс')">Латекс</button>
+        <button class="tab" id="mt-ortho" onclick="setMType('mt-ortho','Ортопедический')">Ортопедический</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Жёсткость</div>
+      <div class="tabs">
+        <button class="tab" id="h-soft" onclick="setHard('h-soft','Мягкий')">Мягкий</button>
+        <button class="tab active" id="h-mid" onclick="setHard('h-mid','Средний')">Средний</button>
+        <button class="tab" id="h-hard" onclick="setHard('h-hard','Жёсткий')">Жёсткий</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Высота матраса</div>
+      <div class="tabs">
+        <button class="tab" id="ht-10" onclick="setHeight('ht-10','до 10 см')">до 10 см</button>
+        <button class="tab active" id="ht-15" onclick="setHeight('ht-15','15–20 см')">15–20 см</button>
+        <button class="tab" id="ht-25" onclick="setHeight('ht-25','от 25 см')">от 25 см</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Размер</div>
+    <div class="size-grid">
+      <button class="size-btn" id="sz-80x190" onclick="setSize('sz-80x190','80×190 см')">80×190<span class="size-sub">Односп.</span></button>
+      <button class="size-btn" id="sz-90x200" onclick="setSize('sz-90x200','90×200 см')">90×200<span class="size-sub">Односп.</span></button>
+      <button class="size-btn" id="sz-120x200" onclick="setSize('sz-120x200','120×200 см')">120×200<span class="size-sub">Полутор.</span></button>
+      <button class="size-btn active" id="sz-140x200" onclick="setSize('sz-140x200','140×200 см')">140×200<span class="size-sub">Двусп.</span></button>
+      <button class="size-btn" id="sz-160x200" onclick="setSize('sz-160x200','160×200 см')">160×200<span class="size-sub">Двусп.</span></button>
+      <button class="size-btn" id="sz-180x200" onclick="setSize('sz-180x200','180×200 см')">180×200<span class="size-sub">Двусп.</span></button>
+      <button class="size-btn" id="sz-200x200" onclick="setSize('sz-200x200','200×200 см')">200×200<span class="size-sub">Евро</span></button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ваши контакты</div>
+    <div class="row2">
+      <div class="field">
+        <label>Имя *</label>
+        <input type="text" id="f-name" placeholder="Как вас зовут?">
+        <span class="error-msg" id="e-name">Укажите имя</span>
+      </div>
+      <div class="field">
+        <label>Телефон / WhatsApp *</label>
+        <input type="tel" id="f-phone" placeholder="+7 900 000-00-00">
+        <span class="error-msg" id="e-phone">Укажите телефон</span>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Город доставки</label>
+        <input type="text" id="f-city" placeholder="Москва">
+      </div>
+      <div class="field">
+        <label>Удобное время звонка</label>
+        <select id="f-time">
+          <option value="">Любое время</option>
+          <option>Утром (9:00–12:00)</option>
+          <option>Днём (12:00–17:00)</option>
+          <option>Вечером (17:00–21:00)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Комментарий / особые пожелания</label>
+      <textarea id="f-comment" placeholder="Например: нестандартный размер, доставка на 3 этаж..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ваш заказ</div>
+    <div class="summary">
+      <div class="summary-row"><span class="summary-key">Тип</span><span class="summary-val" id="s-type">Кровать</span></div>
+      <div class="summary-row" id="sr-design"><span class="summary-key">Дизайн</span><span class="summary-val" id="s-design">Классика</span></div>
+      <div class="summary-row" id="sr-material"><span class="summary-key">Материал</span><span class="summary-val" id="s-material">Велюр</span></div>
+      <div class="summary-row"><span class="summary-key">Цвет</span><span class="summary-val" id="s-color"></span></div>
+      <div class="summary-row"><span class="summary-key">Размер</span><span class="summary-val" id="s-size">140×200 см</span></div>
+      <div class="summary-row" id="sr-opts" style="display:none"><span class="summary-key">Опции</span><span class="summary-val" id="s-opts"></span></div>
+      <div class="summary-row" id="sr-mtype" style="display:none"><span class="summary-key">Тип матраса</span><span class="summary-val" id="s-mtype"></span></div>
+      <div class="summary-row" id="sr-hard" style="display:none"><span class="summary-key">Жёсткость</span><span class="summary-val" id="s-hard"></span></div>
+      <div class="summary-row" id="sr-height" style="display:none"><span class="summary-key">Высота</span><span class="summary-val" id="s-height"></span></div>
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitOrder()">Отправить заказ →</button>
+  </div>
+
+</div>
+
+<div class="success-block" id="success-block">
+  <div style="font-size:4rem;margin-bottom:1rem">✅</div>
+  <h2>Заказ отправлен!</h2>
+  <p>Продавец получил ваш заказ<br>и свяжется с вами в ближайшее время.</p>
+  <button class="reset-btn" onclick="resetForm()">Оформить ещё один заказ</button>
+</div>
+
+</div>
+<footer>Мебель на заказ · Доставка и сборка · <a href="#" onclick="resetSetup()" style="color:var(--muted)">Настройки</a></footer>
+
+<script>
+const COLORS = [
+  {name:'Серый',hex:'#888780'},{name:'Светло-бежевый',hex:'#D3C9B5'},
+  {name:'Молочный',hex:'#F5F0E8'},{name:'Белый',hex:'#FFFFFF'},
+  {name:'Капучино',hex:'#C4A882'},{name:'Коричневый',hex:'#7A5C3A'},
+  {name:'Тёмно-коричневый',hex:'#3D2B1F'},{name:'Чёрный',hex:'#1A1A1A'},
+  {name:'Синий',hex:'#2D5FA5'},{name:'Голубой',hex:'#7DAEE0'},
+  {name:'Зелёный',hex:'#3B7A4B'},{name:'Оливковый',hex:'#7D8C4A'},
+  {name:'Бордовый',hex:'#7A2035'},{name:'Розовый',hex:'#D4789A'},
+  {name:'Горчичный',hex:'#C8952A'},
+];
+
+let st = { type:'bed', design:'Классика', material:'Велюр', color:'Серый', colorHex:'#888780', size:'140×200 см', mtype:'Пружинный (независимые)', hardness:'Средний', height:'15–20 см' };
+
+// Проверка настройки
+function checkSetup() {
+  const token = localStorage.getItem('tg_token');
+  const chatid = localStorage.getItem('tg_chatid');
+  if(token && chatid) {
+    document.getElementById('setup-overlay').style.display = 'none';
+  }
+}
+
+function saveSetup() {
+  const token = document.getElementById('setup-token').value.trim();
+  const chatid = document.getElementById('setup-chatid').value.trim();
+  let ok = true;
+  if(!token) { document.getElementById('e-token').style.display='block'; ok=false; } else { document.getElementById('e-token').style.display='none'; }
+  if(!chatid) { document.getElementById('e-chatid').style.display='block'; ok=false; } else { document.getElementById('e-chatid').style.display='none'; }
+  if(!ok) return;
+  localStorage.setItem('tg_token', token);
+  localStorage.setItem('tg_chatid', chatid);
+  document.getElementById('setup-overlay').style.display = 'none';
+}
+
+function resetSetup() {
+  document.getElementById('setup-token').value = localStorage.getItem('tg_token') || '';
+  document.getElementById('setup-chatid').value = localStorage.getItem('tg_chatid') || '';
+  document.getElementById('setup-overlay').style.display = 'flex';
+}
+
+function buildPalette() {
+  const p = document.getElementById('color-palette');
+  p.innerHTML = '';
+  COLORS.forEach(c => {
+    const s = document.createElement('button');
+    s.className = 'color-swatch' + (c.name===st.color?' active':'');
+    s.id = 'col-'+c.name;
+    s.style.background = c.hex;
+    if(c.hex==='#FFFFFF') s.style.border='2px solid #ddd';
+    s.title = c.name;
+    s.onclick = () => pickColor(c.name, c.hex);
+    p.appendChild(s);
+  });
+}
+
+function pickColor(name, hex) {
+  st.color=name; st.colorHex=hex;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('col-'+name); if(el) el.classList.add('active');
+  document.getElementById('color-label').textContent='Выбрано: '+name;
+  document.getElementById('custom-color').value=hex;
+  document.getElementById('custom-hex').textContent='';
+  updateSummary();
+}
+
+function setCustomColor(hex) {
+  st.color='Свой цвет'; st.colorHex=hex;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+  document.getElementById('color-label').textContent='Выбрано: Свой цвет';
+  document.getElementById('custom-hex').textContent=hex;
+  updateSummary();
+}
+
+function setType(t) {
+  st.type=t;
+  ['bed','mattress'].forEach(x=>{
+    document.getElementById('tb-'+x).className='type-btn'+(x===t?' active':'');
+    document.getElementById(x+'-section').style.display=x===t?'':'none';
+  });
+  const isBed=t==='bed';
+  document.getElementById('sr-design').style.display=isBed?'':'none';
+  document.getElementById('sr-material').style.display=isBed?'':'none';
+  document.getElementById('sr-opts').style.display='none';
+  document.getElementById('sr-mtype').style.display=isBed?'none':'';
+  document.getElementById('sr-hard').style.display=isBed?'none':'';
+  document.getElementById('sr-height').style.display=isBed?'none':'';
+  document.getElementById('s-type').textContent=isBed?'Кровать':'Матрас';
+  updateSummary();
+}
+
+function setDesign(id,label) { st.design=label; document.querySelectorAll('[id^="d-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-design').textContent=label; }
+function setMaterial(id,label) { st.material=label; document.querySelectorAll('[id^="m-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-material').textContent=label; }
+function setSize(id,label) { st.size=label; document.querySelectorAll('[id^="sz-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-size').textContent=label; }
+function setMType(id,label) { st.mtype=label; document.querySelectorAll('[id^="mt-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-mtype').textContent=label; }
+function setHard(id,label) { st.hardness=label; document.querySelectorAll('[id^="h-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-hard').textContent=label; }
+function setHeight(id,label) { st.height=label; document.querySelectorAll('[id^="ht-"]').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('s-height').textContent=label; }
+
+function updateSummary() {
+  const dot='<span class="color-dot" style="background:'+st.colorHex+'"></span>';
+  document.getElementById('s-color').innerHTML=dot+st.color;
+  if(st.type==='bed') {
+    const checks=['opt-storage','opt-mattress','opt-legs','opt-headboard'];
+    const labels=['Ящик/подъём','+ Матрас','Деревянные ножки','Усиленное изголовье'];
+    const sel=checks.map((c,i)=>document.getElementById(c).checked?labels[i]:'').filter(Boolean);
+    if(sel.length){document.getElementById('sr-opts').style.display='';document.getElementById('s-opts').textContent=sel.join(', ');}
+    else{document.getElementById('sr-opts').style.display='none';}
+  }
+}
+
+async function submitOrder() {
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  let ok=true;
+  if(!name){document.getElementById('e-name').style.display='block';ok=false;}else{document.getElementById('e-name').style.display='none';}
+  if(!phone){document.getElementById('e-phone').style.display='block';ok=false;}else{document.getElementById('e-phone').style.display='none';}
+  if(!ok) return;
+
+  const token=localStorage.getItem('tg_token');
+  const chatId=localStorage.getItem('tg_chatid');
+  if(!token||!chatId){ alert('Настройте Telegram-уведомления (ссылка внизу страницы)'); return; }
+
+  const city=document.getElementById('f-city').value.trim();
+  const time=document.getElementById('f-time').value;
+  const comment=document.getElementById('f-comment').value.trim();
+  const checks=['opt-storage','opt-mattress','opt-legs','opt-headboard'];
+  const labels=['Ящик/подъём','+ Матрас','Деревянные ножки','Усиленное изголовье'];
+  const opts=checks.map((c,i)=>document.getElementById(c).checked?'✓ '+labels[i]:'').filter(Boolean).join('\n')||'нет';
+
+  let msg='🛏 *НОВЫЙ ЗАКАЗ*\n\n';
+  msg+='👤 *Клиент:* '+name+'\n';
+  msg+='📞 *Телефон:* '+phone+'\n';
+  if(city) msg+='🏙 *Город:* '+city+'\n';
+  if(time) msg+='🕐 *Время:* '+time+'\n';
+  msg+='\n📋 *Заказ:*\n';
+  msg+='• Тип: '+(st.type==='bed'?'Кровать':'Матрас')+'\n';
+  if(st.type==='bed'){
+    msg+='• Дизайн: '+st.design+'\n';
+    msg+='• Материал: '+st.material+'\n';
+    msg+='• Цвет: '+st.color+' ('+st.colorHex+')\n';
+    msg+='• Размер: '+st.size+'\n';
+    msg+='• Опции: '+(opts==='нет'?opts:'\n'+opts)+'\n';
+  } else {
+    msg+='• Тип матраса: '+st.mtype+'\n';
+    msg+='• Жёсткость: '+st.hardness+'\n';
+    msg+='• Высота: '+st.height+'\n';
+    msg+='• Размер: '+st.size+'\n';
+  }
+  if(comment) msg+='\n💬 *Комментарий:* '+comment;
+
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true; btn.textContent='Отправка...';
+
+  try {
+    const res=await fetch('https://api.telegram.org/bot'+token+'/sendMessage',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:chatId,text:msg,parse_mode:'Markdown'})
+    });
+    const data=await res.json();
+    if(data.ok){
+      document.getElementById('form-wrap').style.display='none';
+      document.getElementById('success-block').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      alert('Ошибка отправки. Проверьте настройки бота.');
+      btn.disabled=false; btn.textContent='Отправить заказ →';
+    }
+  } catch(e) {
+    alert('Ошибка сети. Проверьте интернет.');
+    btn.disabled=false; btn.textContent='Отправить заказ →';
+  }
+}
+
+function resetForm() {
+  document.getElementById('form-wrap').style.display='';
+  document.getElementById('success-block').style.display='none';
+  document.getElementById('f-name').value='';
+  document.getElementById('f-phone').value='';
+  document.getElementById('f-city').value='';
+  document.getElementById('f-comment').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+['opt-storage','opt-mattress','opt-legs','opt-headboard'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',updateSummary);
+});
+
+checkSetup();
+buildPalette();
+updateSummary();
+document.getElementById('s-mtype').textContent=st.mtype;
+document.getElementById('s-hard').textContent=st.hardness;
+document.getElementById('s-height').textContent=st.height;
+</script>
+</body>
+</html>
