@@ -11,7 +11,9 @@
   header { background: var(--accent); color: #fff; padding: 2rem 1.5rem; text-align: center; }
   header h1 { font-size: 1.8rem; margin-bottom: .5rem; }
   .container { max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: none; } /* Скрываем карточки по умолчанию */
+  .card.visible { display: block; } /* Показываем только активные */
+  
   .card-title { font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.05em; }
   
   /* Кнопки материалов */
@@ -26,7 +28,7 @@
   .mat-price { font-size: 0.9rem; color: var(--muted); }
   .mat-btn.active .mat-price { color: var(--accent); font-weight: bold; }
 
-  /* Сетка фото */
+  /* Сетка фото тканей */
   .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
   .color-item { 
     aspect-ratio: 1; border-radius: 8px; overflow: hidden; 
@@ -37,7 +39,7 @@
   .color-item.active .color-img { opacity: 0.8; }
   .color-name { text-align: center; margin-top: 10px; font-weight: 600; color: var(--accent); min-height: 1.2em;}
 
-  /* Список номеров */
+  /* Список номеров тканей */
   .color-list { 
     display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; 
     padding-top: 15px; border-top: 1px solid var(--border);
@@ -50,7 +52,7 @@
   .color-list-item.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
   /* === СТИЛИ ДЛЯ ДИЗАЙНА ИЗГОЛОВЬЯ === */
-  .design-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .design-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
   @media(min-width: 480px) { .design-grid { grid-template-columns: repeat(3, 1fr); } }
   
   .design-btn {
@@ -60,6 +62,21 @@
   }
   .design-btn:hover { background: var(--tag-bg); }
   .design-btn.active { border-color: var(--accent); background: var(--tag-bg); font-weight: 600; color: var(--accent); }
+
+  /* Галерея изголовий */
+  .headboard-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media(min-width: 480px) { .headboard-gallery { grid-template-columns: repeat(3, 1fr); } }
+  
+  .hb-item {
+    aspect-ratio: 1; border-radius: 8px; overflow: hidden;
+    border: 3px solid transparent; cursor: pointer; position: relative; background: #eee;
+  }
+  .hb-item.active { border-color: var(--accent); transform: scale(0.95); }
+  .hb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hb-placeholder { 
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: var(--tag-bg); color: var(--muted); font-size: 0.8rem; text-align: center; padding: 10px;
+  }
 
   .field { margin-bottom: 15px; }
   .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
@@ -91,13 +108,13 @@
 <div class="container" id="app">
   
   <!-- 1. Материал -->
-  <div class="card">
+  <div class="card visible" id="card-material">
     <div class="card-title">1. Выберите материал</div>
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 2. Цвет -->
-  <div class="card">
+  <!-- 2. Цвет ткани (Скрывается при выборе дизайна с фото) -->
+  <div class="card visible" id="card-color">
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
     <div class="color-name" id="selected-color-name">Выберите цвет</div>
@@ -105,7 +122,7 @@
   </div>
 
   <!-- 3. Размер -->
-  <div class="card">
+  <div class="card visible" id="card-size">
     <div class="card-title">3. Размер спального места</div>
     <div class="field">
       <select id="size-select" onchange="updateSummary()">
@@ -119,15 +136,20 @@
     </div>
   </div>
 
-  <!-- 4. Дизайн изголовья (НОВЫЙ БЛОК) -->
-  <div class="card">
+  <!-- 4. Дизайн изголовья -->
+  <div class="card visible" id="card-design">
     <div class="card-title">4. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
-    <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-design-name">Стандарт</div>
+    
+    <!-- Галерея фото изголовья (появляется вместо выбора цвета) -->
+    <div id="headboard-view" style="display:none;">
+      <div class="headboard-gallery" id="hb-gallery"></div>
+      <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-hb-name">Выберите вариант</div>
+    </div>
   </div>
 
   <!-- 5. Контакты -->
-  <div class="card">
+  <div class="card visible" id="card-contact">
     <div class="card-title">5. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
     <div class="field"><input type="tel" id="f-phone" placeholder="+7 (999) 000-00-00"></div>
@@ -139,7 +161,7 @@
     <div class="sum-row"><span>Материал:</span> <span id="sum-mat">-</span></div>
     <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
-    <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Стандарт</span></div>
+    <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Не выбрано</span></div>
     <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-price">0 ₽</span></div>
   </div>
 
@@ -166,22 +188,46 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// СПИСОК ДИЗАЙНОВ ИЗГОЛОВЬЯ
+// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const DESIGNS = [
-  'Геометрия',
-  'Стандарт',
-  'Заборчики',
-  'Дольки 6 штук',
-  'Дольки 8 штук',
-  'Каретная стяжка со стразами',
-  'Каретная стяжка с пуговицами',
-  'Облачко',
-  'Облачко более закругленное'
+const HB_GEOMETRY = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.09.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10%20(1).jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10.jpeg'
+];
+
+const HB_STANDARD = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.47.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.48.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.49.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.50.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.51.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.52.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.53.jpeg'
+];
+
+const HB_FENCE = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.47.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.49.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.52.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.53.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54%20(1).jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54.jpeg'
+];
+
+// Дизайны, для которых пока нет фото
+const DESIGNS_WITH_PHOTOS = ['Геометрия', 'Стандарт', 'Заборчики'];
+const ALL_DESIGNS = [
+  'Геометрия', 'Стандарт', 'Заборчики', 
+  'Дольки 6 штук', 'Дольки 8 штук', 
+  'Каретная стяжка со стразами', 'Каретная стяжка с пуговицами', 
+  'Облачко', 'Облачко более закругленное'
 ];
 
 // ==========================================
-// ССЫЛКИ НА ФОТО ТКАНЕЙ
+// ФОТО ТКАНЕЙ
 // ==========================================
 const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
 const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
@@ -244,11 +290,11 @@ const DATA = {
   }
 };
 
-let state = { mat: 'relax', colorName: '', size: '140x200', design: 'Стандарт' };
+let state = { mat: 'relax', colorName: '', size: '140x200', design: '' };
 
 function init() {
   renderMaterials();
-  renderDesigns();
+  renderDesignButtons();
   selectMaterial('relax');
 }
 
@@ -265,13 +311,12 @@ function renderMaterials() {
   });
 }
 
-// Рендер кнопок дизайна изголовья
-function renderDesigns() {
+function renderDesignButtons() {
   const grid = document.getElementById('design-grid');
   grid.innerHTML = '';
-  DESIGNS.forEach(d => {
+  ALL_DESIGNS.forEach(d => {
     const btn = document.createElement('div');
-    btn.className = 'design-btn' + (d === state.design ? ' active' : '');
+    btn.className = 'design-btn';
     btn.textContent = d;
     btn.onclick = () => selectDesign(d, btn);
     grid.appendChild(btn);
@@ -282,14 +327,49 @@ function selectDesign(name, btnElement) {
   state.design = name;
   document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('active'));
   if(btnElement) btnElement.classList.add('active');
-  else {
-    // Если вызвано программно, ищем кнопку по тексту
-    document.querySelectorAll('.design-btn').forEach(b => {
-      if(b.textContent === name) b.classList.add('active');
-    });
+  
+  const hasPhotos = DESIGNS_WITH_PHOTOS.includes(name);
+  const hbView = document.getElementById('headboard-view');
+  const colorCard = document.getElementById('card-color');
+  
+  if (hasPhotos) {
+    // Показываем галерею изголовья, скрываем выбор цвета
+    hbView.style.display = 'block';
+    colorCard.classList.remove('visible');
+    renderHeadboardGallery(name);
+    document.getElementById('sum-design').textContent = name + ' (выберите фото)';
+  } else {
+    // Скрываем галерею, показываем выбор цвета
+    hbView.style.display = 'none';
+    colorCard.classList.add('visible');
+    document.getElementById('sum-design').textContent = name;
   }
-  document.getElementById('selected-design-name').textContent = name;
-  document.getElementById('sum-design').textContent = name;
+}
+
+function renderHeadboardGallery(designName) {
+  const gallery = document.getElementById('hb-gallery');
+  const nameDisplay = document.getElementById('selected-hb-name');
+  gallery.innerHTML = '';
+  
+  let photos = [];
+  if (designName === 'Геометрия') photos = HB_GEOMETRY;
+  else if (designName === 'Стандарт') photos = HB_STANDARD;
+  else if (designName === 'Заборчики') photos = HB_FENCE;
+  
+  photos.forEach((src, index) => {
+    const item = document.createElement('div');
+    item.className = 'hb-item';
+    item.innerHTML = `<img src="${src}" class="hb-img" loading="lazy">`;
+    
+    item.onclick = () => {
+      openZoom(src); // Сразу открываем зум
+      document.querySelectorAll('.hb-item').forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+      nameDisplay.textContent = `${designName} - Вариант ${index + 1}`;
+      document.getElementById('sum-design').textContent = `${designName} (Вариант ${index + 1})`;
+    };
+    gallery.appendChild(item);
+  });
 }
 
 function selectMaterial(id) {
@@ -364,6 +444,7 @@ async function sendOrder() {
   const name = document.getElementById('f-name').value;
   const phone = document.getElementById('f-phone').value;
   if(!name || !phone) { alert('Заполните Имя и Телефон'); return; }
+  if(!state.design) { alert('Выберите дизайн изголовья'); return; }
   
   const btn = document.getElementById('btn-send');
   btn.disabled = true; btn.textContent = 'Отправка...';
