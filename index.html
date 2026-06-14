@@ -26,6 +26,13 @@
   .mat-price { font-size: 0.9rem; color: var(--muted); }
   .mat-btn.active .mat-price { color: var(--accent); font-weight: bold; }
 
+  /* Заголовки подгрупп */
+  .sub-group-title {
+    font-size: 0.9rem; font-weight: 700; color: var(--text);
+    margin-top: 20px; margin-bottom: 10px; border-left: 4px solid var(--accent);
+    padding-left: 10px; grid-column: 1 / -1;
+  }
+
   /* Сетка цветов */
   .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
   @media(max-width: 400px) { .color-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -42,12 +49,12 @@
     color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none;
   }
   
-  .color-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.8; }
+  .color-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.9; }
   .color-item.active .color-img { opacity: 1; }
 
   .color-name { text-align: center; margin-top: 10px; font-weight: 600; color: var(--accent); min-height: 1.2em;}
 
-  /* Список номеров цветов */
+  /* Список номеров */
   .color-list { 
     display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; 
     padding-top: 15px; border-top: 1px solid var(--border);
@@ -73,7 +80,7 @@
   
   .success { display: none; text-align: center; padding: 3rem 1rem; }
 
-  /* Модальное окно для зума фото */
+  /* Зум фото */
   .zoom-modal {
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
     z-index: 1000; align-items: center; justify-content: center;
@@ -100,13 +107,11 @@
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 2. Цвет (Фото с цифрами) -->
+  <!-- 2. Цвет -->
   <div class="card">
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
     <div class="color-name" id="selected-color-name">Выберите цвет</div>
-    
-    <!-- Список номеров цветов -->
     <div class="color-list" id="color-list"></div>
   </div>
 
@@ -164,76 +169,37 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ДАННЫЕ О ТКАНЯХ И ЦВЕТАХ
+// ССЫЛКИ НА ФОТО (ПО ВАШЕМУ РАСПРЕДЕЛЕНИЮ)
 // ==========================================
-const IMG_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
-const IMG_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
-const IMG_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
-const IMG_4 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg';
-const IMG_5 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg';
-const IMG_6 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg';
-const IMG_7 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
-const IMG_8 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
+const BASE_URL = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/';
+const IMG_RELAX_1 = BASE_URL + 'photo_2026-06-14%2013.30.10.jpeg'; // Антивандальный 1
+const IMG_RELAX_2 = BASE_URL + 'photo_2026-06-14%2013.30.12.jpeg'; // Антивандальный 2
+const IMG_RELAX_3 = BASE_URL + 'photo_2026-06-14%2013.30.13.jpeg'; // Антивандальный 3
+const IMG_BELISIMMO = BASE_URL + 'photo_2026-06-14%2013.30.07.jpeg'; // Стандартный Belisimmo
+const IMG_BOSTON_1 = BASE_URL + 'photo_2026-06-14%2013.30.06.jpeg';  // Стандартный Boston 1
+const IMG_BOSTON_2 = BASE_URL + 'photo_2026-06-14%2013.30.04.jpeg'; // Стандартный Boston 2
+const IMG_BOUCLE_1 = BASE_URL + 'photo_2026-06-14%2013.30.18.jpeg'; // Букле 1
+const IMG_BOUCLE_2 = BASE_URL + 'photo_2026-06-14%2013.30.20.jpeg'; // Букле 2
 
-const PLACEHOLDER = 'https://via.placeholder.com/300/E2DDD8/7A7570?text=No+Photo';
+const PLACEHOLDER = 'https://via.placeholder.com/300/E2DDD8/7A7570?text=Нет+фото';
 
+// Структура данных
 const DATA = {
-  // БУКЛЕ (TEDDY) - 8 цветов
-  boucle: {
-    id: 'boucle',
-    name: 'Букле (Teddy)',
-    price: 2000,
-    colors: [
-      { num: '1', name: 'White', img: IMG_1 },
-      { num: '2', name: 'Beige', img: IMG_2 },
-      { num: '3', name: 'Brown', img: IMG_3 },
-      { num: '4', name: 'Rust', img: IMG_4 },
-      { num: '5', name: 'Rose', img: IMG_5 },
-      { num: '6', name: 'Silver', img: IMG_6 },
-      { num: '7', name: 'Storm', img: IMG_7 },
-      { num: '8', name: 'Grey', img: IMG_8 }
-    ]
-  },
-  
-  // СТАНДАРТНЫЙ ВЕЛЮР (Belisimmo + Boston)
-  velvet: {
-    id: 'velvet',
-    name: 'Стандартный велюр',
-    price: 0,
-    colors: [
-      { num: '1', name: 'Belisimmo 1', img: IMG_1 },
-      { num: '3', name: 'Belisimmo 3', img: IMG_2 },
-      { num: '4', name: 'Belisimmo 4', img: IMG_3 },
-      { num: '5', name: 'Belisimmo 5', img: IMG_4 },
-      { num: '7', name: 'Belisimmo 7', img: IMG_5 },
-      { num: '9', name: 'Belisimmo 9', img: IMG_6 },
-      { num: '10', name: 'Belisimmo 10', img: IMG_7 },
-      { num: '11', name: 'Belisimmo 11', img: IMG_8 },
-      { num: '12', name: 'Boston 12', img: PLACEHOLDER },
-      { num: '13', name: 'Boston 13', img: PLACEHOLDER },
-      { num: '14', name: 'Boston 14', img: PLACEHOLDER },
-      { num: '15', name: 'Boston 15', img: PLACEHOLDER },
-      { num: '16', name: 'Boston 16', img: PLACEHOLDER },
-      { num: '18', name: 'Boston 18', img: PLACEHOLDER },
-      { num: '20', name: 'Boston 20', img: PLACEHOLDER },
-      { num: '21', name: 'Boston 21', img: PLACEHOLDER }
-    ]
-  },
-
-  // АНТИВАНДАЛЬНЫЙ (RELAX)
+  // 1. АНТИВАНДАЛЬНЫЙ (RELAX)
   relax: {
     id: 'relax',
     name: 'Антивандальный (Relax)',
     price: 1000,
+    hasSubgroups: false,
     colors: [
-      { num: '30', name: 'Relax 30', img: IMG_1 },
-      { num: '20', name: 'Relax 20', img: IMG_2 },
-      { num: '35', name: 'Relax 35', img: IMG_3 },
-      { num: '40', name: 'Relax 40', img: IMG_4 },
-      { num: '50', name: 'Relax 50', img: IMG_5 },
-      { num: '70', name: 'Relax 70', img: IMG_6 },
-      { num: '75', name: 'Relax 75', img: IMG_7 },
-      { num: '190', name: 'Relax 190', img: IMG_8 },
+      { num: '30', name: 'Relax 30', img: IMG_RELAX_1 },
+      { num: '20', name: 'Relax 20', img: IMG_RELAX_1 },
+      { num: '35', name: 'Relax 35', img: IMG_RELAX_2 },
+      { num: '40', name: 'Relax 40', img: IMG_RELAX_2 },
+      { num: '50', name: 'Relax 50', img: IMG_RELAX_3 },
+      { num: '70', name: 'Relax 70', img: IMG_RELAX_3 },
+      { num: '75', name: 'Relax 75', img: PLACEHOLDER },
+      { num: '190', name: 'Relax 190', img: PLACEHOLDER },
       { num: '180', name: 'Relax 180', img: PLACEHOLDER },
       { num: '170', name: 'Relax 170', img: PLACEHOLDER },
       { num: '140', name: 'Relax 140', img: PLACEHOLDER },
@@ -244,14 +210,68 @@ const DATA = {
       { num: '65', name: 'Relax 65', img: PLACEHOLDER },
       { num: '63', name: 'Relax 63', img: PLACEHOLDER }
     ]
+  },
+  
+  // 2. СТАНДАРТНЫЙ ВЕЛЮР (С ПОДГРУППАМИ)
+  velvet: {
+    id: 'velvet',
+    name: 'Стандартный велюр',
+    price: 0,
+    hasSubgroups: true,
+    subgroups: {
+      belisimmo: {
+        title: 'Коллекция Belisimmo',
+        colors: [
+          { num: '1', name: 'Belisimmo 1', img: IMG_BELISIMMO },
+          { num: '3', name: 'Belisimmo 3', img: IMG_BELISIMMO },
+          { num: '4', name: 'Belisimmo 4', img: IMG_BELISIMMO },
+          { num: '5', name: 'Belisimmo 5', img: IMG_BELISIMMO },
+          { num: '7', name: 'Belisimmo 7', img: IMG_BELISIMMO },
+          { num: '9', name: 'Belisimmo 9', img: IMG_BELISIMMO },
+          { num: '10', name: 'Belisimmo 10', img: IMG_BELISIMMO },
+          { num: '11', name: 'Belisimmo 11', img: IMG_BELISIMMO }
+        ]
+      },
+      boston: {
+        title: 'Коллекция Boston',
+        colors: [
+          { num: '1', name: 'Boston 1', img: IMG_BOSTON_1 },
+          { num: '2', name: 'Boston 2', img: IMG_BOSTON_1 },
+          { num: '3', name: 'Boston 3', img: IMG_BOSTON_2 },
+          { num: '4', name: 'Boston 4', img: IMG_BOSTON_2 },
+          { num: '5', name: 'Boston 5', img: IMG_BOSTON_1 },
+          { num: '6', name: 'Boston 6', img: IMG_BOSTON_2 },
+          { num: '7', name: 'Boston 7', img: IMG_BOSTON_1 },
+          { num: '8', name: 'Boston 8', img: IMG_BOSTON_2 }
+        ]
+      }
+    }
+  },
+
+  // 3. БУКЛЕ (TEDDY)
+  boucle: {
+    id: 'boucle',
+    name: 'Букле (Teddy)',
+    price: 2000,
+    hasSubgroups: false,
+    colors: [
+      { num: '1', name: 'White', img: IMG_BOUCLE_1 },
+      { num: '2', name: 'Beige', img: IMG_BOUCLE_1 },
+      { num: '3', name: 'Brown', img: IMG_BOUCLE_2 },
+      { num: '4', name: 'Rust', img: IMG_BOUCLE_2 },
+      { num: '5', name: 'Rose', img: PLACEHOLDER },
+      { num: '6', name: 'Silver', img: PLACEHOLDER },
+      { num: '7', name: 'Storm', img: PLACEHOLDER },
+      { num: '8', name: 'Grey', img: PLACEHOLDER }
+    ]
   }
 };
 
-let state = { mat: 'boucle', colorName: '', size: '140x200' };
+let state = { mat: 'relax', colorName: '', size: '140x200' };
 
 function init() {
   renderMaterials();
-  selectMaterial('boucle');
+  selectMaterial('relax');
 }
 
 function renderMaterials() {
@@ -271,9 +291,84 @@ function selectMaterial(id) {
   state.mat = id;
   document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`btn-${id}`).classList.add('active');
-  renderColors(DATA[id].colors);
-  document.getElementById('sum-mat').textContent = DATA[id].name;
-  document.getElementById('sum-price').textContent = DATA[id].price > 0 ? `+${DATA[id].price} ₽` : '0 ₽';
+  
+  const matData = DATA[id];
+  document.getElementById('sum-mat').textContent = matData.name;
+  document.getElementById('sum-price').textContent = matData.price > 0 ? `+${matData.price} ₽` : '0 ₽';
+  
+  if (matData.hasSubgroups) {
+    renderSubgroups(matData.subgroups);
+  } else {
+    renderColors(matData.colors);
+  }
+}
+
+function renderSubgroups(subgroups) {
+  const grid = document.getElementById('color-grid');
+  const list = document.getElementById('color-list');
+  grid.innerHTML = '';
+  list.innerHTML = '';
+  
+  let isFirstColorSelected = false;
+
+  Object.keys(subgroups).forEach(key => {
+    const group = subgroups[key];
+    
+    // Заголовок группы
+    const header = document.createElement('div');
+    header.className = 'sub-group-title';
+    header.textContent = group.title;
+    grid.appendChild(header);
+    
+    // Цвета группы
+    group.colors.forEach((c, index) => {
+      const item = document.createElement('div');
+      item.className = 'color-item';
+      
+      // Выбираем самый первый цвет первой группы
+      if (!isFirstColorSelected && index === 0) {
+         item.classList.add('active');
+         selectColor(`${c.num} - ${c.name}`);
+         isFirstColorSelected = true;
+      }
+      
+      const clickAction = c.img !== PLACEHOLDER ? `onclick="openZoom('${c.img}')"` : '';
+      item.innerHTML = `
+        <img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy" ${clickAction}>
+        <span class="color-number">${c.num}</span>
+      `;
+      
+      item.onclick = (e) => {
+        if(e.target.tagName !== 'IMG') {
+           document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+           item.classList.add('active');
+           selectColor(`${c.num} - ${c.name}`);
+        } else {
+           setTimeout(() => {
+              document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+              item.classList.add('active');
+              selectColor(`${c.num} - ${c.name}`);
+           }, 100);
+        }
+      };
+      grid.appendChild(item);
+    });
+    
+    // Номера в нижнем списке с пометкой группы
+    group.colors.forEach(c => {
+      const listItem = document.createElement('div');
+      listItem.className = 'color-list-item';
+      // Добавляем префикс B или Bo для ясности
+      const prefix = key === 'belisimmo' ? 'B-' : 'Bo-';
+      listItem.textContent = `${prefix}${c.num}`;
+      listItem.onclick = () => {
+        document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
+        listItem.classList.add('active');
+        selectColor(`${c.num} (${group.title})`);
+      };
+      list.appendChild(listItem);
+    });
+  });
 }
 
 function renderColors(colors) {
@@ -282,28 +377,32 @@ function renderColors(colors) {
   grid.innerHTML = '';
   list.innerHTML = '';
   
-  // Выбираем первый цвет по умолчанию
   selectColor(`${colors[0].num} - ${colors[0].name}`);
   
-  // Рендерим сетку фото
   colors.forEach((c, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
+    const clickAction = c.img !== PLACEHOLDER ? `onclick="openZoom('${c.img}')"` : '';
     item.innerHTML = `
-      <img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy" onclick="openZoom('${c.img}')">
+      <img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy" ${clickAction}>
       <span class="color-number">${c.num}</span>
     `;
     item.onclick = (e) => {
       if(e.target.tagName !== 'IMG') {
-        document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
-        selectColor(`${c.num} - ${c.name}`);
+         document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+         item.classList.add('active');
+         selectColor(`${c.num} - ${c.name}`);
+      } else {
+         setTimeout(() => {
+            document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+            selectColor(`${c.num} - ${c.name}`);
+         }, 100);
       }
     };
     grid.appendChild(item);
   });
   
-  // Рендерим список номеров
   colors.forEach((c, index) => {
     const listItem = document.createElement('div');
     listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
@@ -311,11 +410,8 @@ function renderColors(colors) {
     listItem.onclick = () => {
       document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
       listItem.classList.add('active');
-      
-      // Также активируем соответствующую карточку в сетке
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
       grid.children[index].classList.add('active');
-      
       selectColor(`${c.num} - ${c.name}`);
     };
     list.appendChild(listItem);
@@ -333,7 +429,6 @@ function updateSummary() {
   document.getElementById('sum-size').textContent = state.size;
 }
 
-// Функции для зума фото
 function openZoom(imgSrc) {
   const modal = document.getElementById('zoom-modal');
   const img = document.getElementById('zoom-img');
@@ -356,7 +451,7 @@ async function sendOrder() {
   const matData = DATA[state.mat];
   const comment = document.getElementById('f-comment').value;
   
-  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n *Имя:* ${name}\n *Телефон:* ${phone}\n\n *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Доплата: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
+  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Доплата: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
   
   try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
