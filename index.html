@@ -1,3 +1,14 @@
+Вот полностью готовый код. Я уже вставил ваш токен и Chat ID внутрь.
+
+**Что нужно сделать:**
+1.  Скопируйте весь код ниже.
+2.  Зайдите в GitHub, откройте файл `index.html`.
+3.  Удалите всё, что там есть сейчас, и вставьте этот код.
+4.  Нажмите зеленую кнопку **Commit changes**.
+
+Теперь клиентам будет открываться сразу форма заказа, а уведомления будут приходить вам в Telegram автоматически.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -5,17 +16,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Заказ кровати или матраса</title>
 <style>
-  :root {
-    --bg: #F7F5F2;
-    --surface: #FFFFFF;
-    --border: #E2DDD8;
-    --text: #1A1814;
-    --muted: #7A7570;
-    --accent: #2C2420;
-    --tag-bg: #EDE9E4;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
+  :root { --bg: #F7F5F2; --surface: #FFFFFF; --border: #E2DDD8; --text: #1A1814; --muted: #7A7570; --accent: #2C2420; --tag-bg: #EDE9E4; --radius: 12px; --radius-sm: 8px; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); min-height: 100vh; }
   header { background: var(--accent); color: #fff; padding: 2rem 1.5rem 1.5rem; text-align: center; }
@@ -53,7 +54,7 @@
   @media(max-width:480px) { .row2 { grid-template-columns: 1fr; } }
   .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
   .field label { font-size: .8rem; color: var(--muted); font-weight: 500; }
-  input[type=text], input[type=tel], input[type=password], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: .9rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color .15s; }
+  input[type=text], input[type=tel], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: .9rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color .15s; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   textarea { height: 80px; resize: vertical; }
   .extras { display: flex; flex-direction: column; gap: 10px; }
@@ -76,48 +77,18 @@
   .success-block h2 { font-size: 1.5rem; margin-bottom: .5rem; }
   .success-block p { color: var(--muted); font-size: .95rem; margin-bottom: 1.5rem; }
   .reset-btn { padding: 12px 28px; background: transparent; color: var(--accent); border: 2px solid var(--accent); border-radius: var(--radius); font-size: .95rem; font-weight: 600; cursor: pointer; font-family: inherit; }
-
-  /* Экран настройки */
-  .setup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
-  .setup-box { background: var(--surface); border-radius: var(--radius); padding: 2rem; max-width: 440px; width: 100%; }
-  .setup-box h2 { font-size: 1.2rem; margin-bottom: .5rem; }
-  .setup-box p { font-size: .875rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
-  .setup-btn { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: .95rem; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: .75rem; }
-  .setup-note { font-size: .78rem; color: var(--muted); margin-top: .75rem; text-align: center; }
   footer { text-align: center; padding: 1rem; font-size: .8rem; color: var(--muted); }
 </style>
 </head>
 <body>
 
-<!-- Экран первоначальной настройки (показывается только если токен не сохранён) -->
-<div class="setup-overlay" id="setup-overlay">
-  <div class="setup-box">
-    <h2>⚙️ Настройка уведомлений</h2>
-    <p>Введите данные Telegram-бота, чтобы заказы приходили вам. Это делается один раз — данные сохранятся в браузере.</p>
-    <div class="field">
-      <label>Токен Telegram-бота</label>
-      <input type="password" id="setup-token" placeholder="1234567890:AAF...">
-      <span class="error-msg" id="e-token">Введите токен</span>
-    </div>
-    <div class="field">
-      <label>Ваш Chat ID</label>
-      <input type="text" id="setup-chatid" placeholder="5210823670">
-      <span class="error-msg" id="e-chatid">Введите Chat ID</span>
-    </div>
-    <button class="setup-btn" onclick="saveSetup()">Сохранить и начать</button>
-    <p class="setup-note">🔒 Данные хранятся только в вашем браузере и никуда не передаются</p>
-  </div>
-</div>
-
 <header>
-  <h1>🛏 Сборка вашей кровати</h1>
+  <h1> Сборка вашей кровати</h1>
   <p>Выберите параметры — мы свяжемся для подтверждения</p>
 </header>
 
 <div class="container">
-
 <div id="form-wrap">
-
   <div class="card">
     <div class="card-title">Что вы хотите заказать?</div>
     <div class="type-switcher">
@@ -261,7 +232,6 @@
     </div>
     <button class="submit-btn" id="submit-btn" onclick="submitOrder()">Отправить заказ →</button>
   </div>
-
 </div>
 
 <div class="success-block" id="success-block">
@@ -270,11 +240,18 @@
   <p>Продавец получил ваш заказ<br>и свяжется с вами в ближайшее время.</p>
   <button class="reset-btn" onclick="resetForm()">Оформить ещё один заказ</button>
 </div>
-
 </div>
-<footer>Мебель на заказ · Доставка и сборка · <a href="#" onclick="resetSetup()" style="color:var(--muted)">Настройки</a></footer>
+
+<footer>Мебель на заказ · Доставка и сборка</footer>
 
 <script>
+// ==========================================
+// НАСТРОЙКИ БОТА (ВАШИ ДАННЫЕ)
+// ==========================================
+const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
+const CHAT_ID = '5210823670';
+// ==========================================
+
 const COLORS = [
   {name:'Серый',hex:'#888780'},{name:'Светло-бежевый',hex:'#D3C9B5'},
   {name:'Молочный',hex:'#F5F0E8'},{name:'Белый',hex:'#FFFFFF'},
@@ -287,33 +264,6 @@ const COLORS = [
 ];
 
 let st = { type:'bed', design:'Классика', material:'Велюр', color:'Серый', colorHex:'#888780', size:'140×200 см', mtype:'Пружинный (независимые)', hardness:'Средний', height:'15–20 см' };
-
-// Проверка настройки
-function checkSetup() {
-  const token = localStorage.getItem('tg_token');
-  const chatid = localStorage.getItem('tg_chatid');
-  if(token && chatid) {
-    document.getElementById('setup-overlay').style.display = 'none';
-  }
-}
-
-function saveSetup() {
-  const token = document.getElementById('setup-token').value.trim();
-  const chatid = document.getElementById('setup-chatid').value.trim();
-  let ok = true;
-  if(!token) { document.getElementById('e-token').style.display='block'; ok=false; } else { document.getElementById('e-token').style.display='none'; }
-  if(!chatid) { document.getElementById('e-chatid').style.display='block'; ok=false; } else { document.getElementById('e-chatid').style.display='none'; }
-  if(!ok) return;
-  localStorage.setItem('tg_token', token);
-  localStorage.setItem('tg_chatid', chatid);
-  document.getElementById('setup-overlay').style.display = 'none';
-}
-
-function resetSetup() {
-  document.getElementById('setup-token').value = localStorage.getItem('tg_token') || '';
-  document.getElementById('setup-chatid').value = localStorage.getItem('tg_chatid') || '';
-  document.getElementById('setup-overlay').style.display = 'flex';
-}
 
 function buildPalette() {
   const p = document.getElementById('color-palette');
@@ -392,10 +342,6 @@ async function submitOrder() {
   if(!phone){document.getElementById('e-phone').style.display='block';ok=false;}else{document.getElementById('e-phone').style.display='none';}
   if(!ok) return;
 
-  const token=localStorage.getItem('tg_token');
-  const chatId=localStorage.getItem('tg_chatid');
-  if(!token||!chatId){ alert('Настройте Telegram-уведомления (ссылка внизу страницы)'); return; }
-
   const city=document.getElementById('f-city').value.trim();
   const time=document.getElementById('f-time').value;
   const comment=document.getElementById('f-comment').value.trim();
@@ -428,9 +374,9 @@ async function submitOrder() {
   btn.disabled=true; btn.textContent='Отправка...';
 
   try {
-    const res=await fetch('https://api.telegram.org/bot'+token+'/sendMessage',{
+    const res=await fetch('https://api.telegram.org/bot'+BOT_TOKEN+'/sendMessage',{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:chatId,text:msg,parse_mode:'Markdown'})
+      body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})
     });
     const data=await res.json();
     if(data.ok){
@@ -438,7 +384,7 @@ async function submitOrder() {
       document.getElementById('success-block').style.display='block';
       window.scrollTo({top:0,behavior:'smooth'});
     } else {
-      alert('Ошибка отправки. Проверьте настройки бота.');
+      alert('Ошибка отправки. Попробуйте позже.');
       btn.disabled=false; btn.textContent='Отправить заказ →';
     }
   } catch(e) {
@@ -461,7 +407,6 @@ function resetForm() {
   document.getElementById(id).addEventListener('change',updateSummary);
 });
 
-checkSetup();
 buildPalette();
 updateSummary();
 document.getElementById('s-mtype').textContent=st.mtype;
@@ -470,3 +415,4 @@ document.getElementById('s-height').textContent=st.height;
 </script>
 </body>
 </html>
+```
