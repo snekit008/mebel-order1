@@ -155,25 +155,26 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ССЫЛКИ НА ФОТО
+// ВСЕ ССЫЛКИ НА ФОТО (ВСТАВЛЕНЫ)
 // ==========================================
-const BASE_URL = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/';
 
-// Фото для Антивандального (Relax)
-const RELAX_1 = BASE_URL + 'photo_2026-06-14%2013.30.10.jpeg';
-const RELAX_2 = BASE_URL + 'photo_2026-06-14%2013.30.12.jpeg';
-const RELAX_3 = BASE_URL + 'photo_2026-06-14%2013.30.13.jpeg';
+// Антивандальный (Relax) - 3 ссылки
+const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
+const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
+const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
 
-// Фото для Стандартного велюра
-const VELVET_1 = BASE_URL + 'photo_2026-06-14%2013.30.07.jpeg';
-const VELVET_2 = BASE_URL + 'photo_2026-06-14%2013.30.06.jpeg';
-const VELVET_3 = BASE_URL + 'photo_2026-06-14%2013.30.04.jpeg';
+// Стандартный велюр - Belisimmo (1 ссылка)
+const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg';
 
-// Фото для Букле (Teddy)
-const BOUCLE_1 = BASE_URL + 'photo_2026-06-14%2013.30.18.jpeg';
-const BOUCLE_2 = BASE_URL + 'photo_2026-06-14%2013.30.20.jpeg';
+// Стандартный велюр - Boston (2 ссылки)
+const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg';
+const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg';
 
-// Структура данных с ПОЛНЫМИ списками
+// Букле (Teddy) - 2 ссылки
+const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
+const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
+
+// Структура данных с ПОЛНЫМИ списками и правильными фото
 const DATA = {
   // 1. АНТИВАНДАЛЬНЫЙ (RELAX)
   relax: {
@@ -206,51 +207,51 @@ const DATA = {
     id: 'velvet',
     name: 'Стандартный велюр',
     price: 0,
-    // Объединяем два списка в один массив, добавляя префиксы для ясности
     colors: [
-      // Belisimmo
-      { num: 'B-1', name: 'Belisimmo 1', img: VELVET_1 },
-      { num: 'B-3', name: 'Belisimmo 3', img: VELVET_1 },
-      { num: 'B-4', name: 'Belisimmo 4', img: VELVET_2 },
-      { num: 'B-5', name: 'Belisimmo 5', img: VELVET_2 },
-      { num: 'B-7', name: 'Belisimmo 7', img: VELVET_3 },
-      { num: 'B-9', name: 'Belisimmo 9', img: VELVET_3 },
-      { num: 'B-10', name: 'Belisimmo 10', img: VELVET_1 },
-      { num: 'B-11', name: 'Belisimmo 11', img: VELVET_1 },
-      { num: 'B-12', name: 'Belisimmo 12', img: VELVET_2 },
-      { num: 'B-13', name: 'Belisimmo 13', img: VELVET_2 },
-      { num: 'B-14', name: 'Belisimmo 14', img: VELVET_3 },
-      { num: 'B-15', name: 'Belisimmo 15', img: VELVET_3 },
-      { num: 'B-16', name: 'Belisimmo 16', img: VELVET_1 },
-      { num: 'B-18', name: 'Belisimmo 18', img: VELVET_1 },
-      { num: 'B-20', name: 'Belisimmo 20', img: VELVET_2 },
-      { num: 'B-21', name: 'Belisimmo 21', img: VELVET_2 },
-      { num: 'B-22', name: 'Belisimmo 22', img: VELVET_3 },
-      { num: 'B-23', name: 'Belisimmo 23', img: VELVET_3 },
-      { num: 'B-25', name: 'Belisimmo 25', img: VELVET_1 },
-      { num: 'B-26', name: 'Belisimmo 26', img: VELVET_1 },
-      { num: 'B-27', name: 'Belisimmo 27', img: VELVET_2 },
-      { num: 'B-28', name: 'Belisimmo 28', img: VELVET_2 },
-      { num: 'B-35', name: 'Belisimmo 35', img: VELVET_3 },
-      // Boston
-      { num: 'Bo-1', name: 'Boston 1', img: VELVET_1 },
-      { num: 'Bo-2', name: 'Boston 2', img: VELVET_1 },
-      { num: 'Bo-3', name: 'Boston 3', img: VELVET_2 },
-      { num: 'Bo-4', name: 'Boston 4', img: VELVET_2 },
-      { num: 'Bo-5', name: 'Boston 5', img: VELVET_3 },
-      { num: 'Bo-6', name: 'Boston 6', img: VELVET_3 },
-      { num: 'Bo-7', name: 'Boston 7', img: VELVET_1 },
-      { num: 'Bo-8', name: 'Boston 8', img: VELVET_1 },
-      { num: 'Bo-9', name: 'Boston 9', img: VELVET_2 },
-      { num: 'Bo-10', name: 'Boston 10', img: VELVET_2 },
-      { num: 'Bo-14', name: 'Boston 14', img: VELVET_3 },
-      { num: 'Bo-15', name: 'Boston 15', img: VELVET_3 },
-      { num: 'Bo-16', name: 'Boston 16', img: VELVET_1 },
-      { num: 'Bo-17', name: 'Boston 17', img: VELVET_1 },
-      { num: 'Bo-18', name: 'Boston 18', img: VELVET_2 },
-      { num: 'Bo-19', name: 'Boston 19', img: VELVET_2 },
-      { num: 'Bo-20', name: 'Boston 20', img: VELVET_3 },
-      { num: 'Bo-21', name: 'Boston 21', img: VELVET_3 }
+      // Belisimmo (используем BELISIMMO_1)
+      { num: 'B-1', name: 'Belisimmo 1', img: BELISIMMO_1 },
+      { num: 'B-3', name: 'Belisimmo 3', img: BELISIMMO_1 },
+      { num: 'B-4', name: 'Belisimmo 4', img: BELISIMMO_1 },
+      { num: 'B-5', name: 'Belisimmo 5', img: BELISIMMO_1 },
+      { num: 'B-7', name: 'Belisimmo 7', img: BELISIMMO_1 },
+      { num: 'B-9', name: 'Belisimmo 9', img: BELISIMMO_1 },
+      { num: 'B-10', name: 'Belisimmo 10', img: BELISIMMO_1 },
+      { num: 'B-11', name: 'Belisimmo 11', img: BELISIMMO_1 },
+      { num: 'B-12', name: 'Belisimmo 12', img: BELISIMMO_1 },
+      { num: 'B-13', name: 'Belisimmo 13', img: BELISIMMO_1 },
+      { num: 'B-14', name: 'Belisimmo 14', img: BELISIMMO_1 },
+      { num: 'B-15', name: 'Belisimmo 15', img: BELISIMMO_1 },
+      { num: 'B-16', name: 'Belisimmo 16', img: BELISIMMO_1 },
+      { num: 'B-18', name: 'Belisimmo 18', img: BELISIMMO_1 },
+      { num: 'B-20', name: 'Belisimmo 20', img: BELISIMMO_1 },
+      { num: 'B-21', name: 'Belisimmo 21', img: BELISIMMO_1 },
+      { num: 'B-22', name: 'Belisimmo 22', img: BELISIMMO_1 },
+      { num: 'B-23', name: 'Belisimmo 23', img: BELISIMMO_1 },
+      { num: 'B-25', name: 'Belisimmo 25', img: BELISIMMO_1 },
+      { num: 'B-26', name: 'Belisimmo 26', img: BELISIMMO_1 },
+      { num: 'B-27', name: 'Belisimmo 27', img: BELISIMMO_1 },
+      { num: 'B-28', name: 'Belisimmo 28', img: BELISIMMO_1 },
+      { num: 'B-35', name: 'Belisimmo 35', img: BELISIMMO_1 },
+      
+      // Boston (чередую BOSTON_1 и BOSTON_2)
+      { num: 'Bo-1', name: 'Boston 1', img: BOSTON_1 },
+      { num: 'Bo-2', name: 'Boston 2', img: BOSTON_2 },
+      { num: 'Bo-3', name: 'Boston 3', img: BOSTON_1 },
+      { num: 'Bo-4', name: 'Boston 4', img: BOSTON_2 },
+      { num: 'Bo-5', name: 'Boston 5', img: BOSTON_1 },
+      { num: 'Bo-6', name: 'Boston 6', img: BOSTON_2 },
+      { num: 'Bo-7', name: 'Boston 7', img: BOSTON_1 },
+      { num: 'Bo-8', name: 'Boston 8', img: BOSTON_2 },
+      { num: 'Bo-9', name: 'Boston 9', img: BOSTON_1 },
+      { num: 'Bo-10', name: 'Boston 10', img: BOSTON_2 },
+      { num: 'Bo-14', name: 'Boston 14', img: BOSTON_1 },
+      { num: 'Bo-15', name: 'Boston 15', img: BOSTON_2 },
+      { num: 'Bo-16', name: 'Boston 16', img: BOSTON_1 },
+      { num: 'Bo-17', name: 'Boston 17', img: BOSTON_2 },
+      { num: 'Bo-18', name: 'Boston 18', img: BOSTON_1 },
+      { num: 'Bo-19', name: 'Boston 19', img: BOSTON_2 },
+      { num: 'Bo-20', name: 'Boston 20', img: BOSTON_1 },
+      { num: 'Bo-21', name: 'Boston 21', img: BOSTON_2 }
     ]
   },
 
@@ -313,22 +314,20 @@ function renderColors(colors) {
   // Выбираем первый цвет по умолчанию
   selectColor(`${colors[0].num} - ${colors[0].name}`);
   
-  // Рендерим сетку фото (показываем только первые 3 уникальных фото или заглушки)
-  // Чтобы не ломать верстку, если цветов 50+, показываем только превью первых 3-х
-  const previewColors = colors.slice(0, 3); 
+  // Рендерим сетку фото (показываем только первые 3 уникальных фото)
+  const uniqueImages = [...new Set(colors.map(c => c.img))].slice(0, 3);
   
-  previewColors.forEach((c, index) => {
+  uniqueImages.forEach((imgSrc, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
-    item.innerHTML = `<img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy">`;
+    item.innerHTML = `<img src="${imgSrc}" class="color-img" alt="Color" loading="lazy">`;
     
     item.onclick = () => {
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
       item.classList.add('active');
-      // При клике на фото выбираем соответствующий цвет из полного списка
-      // Но так как фото повторяются, просто выберем первый попавшийся с таким же фото
-      const matchingColor = colors.find(col => col.img === c.img);
-      if(matchingColor) selectColor(`${matchingColor.num} - ${matchingColor.name}`);
+      // Находим первый цвет с этим фото
+      const firstColorWithImg = colors.find(c => c.img === imgSrc);
+      if(firstColorWithImg) selectColor(`${firstColorWithImg.num} - ${firstColorWithImg.name}`);
     };
     grid.appendChild(item);
   });
@@ -337,17 +336,14 @@ function renderColors(colors) {
   colors.forEach((c, index) => {
     const listItem = document.createElement('div');
     listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
-    // Для велюра показываем короткий номер (без B- или Bo-), но в логику передаем полный
+    // Убираем префиксы B- и Bo- для отображения, оставляем чистый номер
     const displayNum = c.num.replace('B-', '').replace('Bo-', '');
     listItem.textContent = displayNum;
     
     listItem.onclick = () => {
       document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
       listItem.classList.add('active');
-      
-      // Снимаем выделение с фото, так как выбран конкретный номер из списка
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-      
       selectColor(`${c.num} - ${c.name}`);
     };
     list.appendChild(listItem);
