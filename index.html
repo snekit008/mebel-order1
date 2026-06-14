@@ -26,7 +26,7 @@
   .mat-price { font-size: 0.9rem; color: var(--muted); }
   .mat-btn.active .mat-price { color: var(--accent); font-weight: bold; }
 
-  /* Сетка цветов - строго 3 в ряд */
+  /* Сетка фото (строго 3 в ряд) */
   .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
   
   .color-item { 
@@ -35,14 +35,12 @@
     background: #eee;
   }
   .color-item.active { border-color: var(--accent); transform: scale(0.95); }
-  
-  /* Убрал цифру с фото, теперь она только в списке снизу */
   .color-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .color-item.active .color-img { opacity: 0.8; }
 
   .color-name { text-align: center; margin-top: 10px; font-weight: 600; color: var(--accent); min-height: 1.2em;}
 
-  /* Список номеров */
+  /* Полный список номеров цветов */
   .color-list { 
     display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; 
     padding-top: 15px; border-top: 1px solid var(--border);
@@ -50,7 +48,7 @@
   .color-list-item {
     padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px;
     font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
-    background: #fff;
+    background: #fff; white-space: nowrap;
   }
   .color-list-item:hover { background: var(--tag-bg); }
   .color-list-item.active { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -83,7 +81,7 @@
 <body>
 
 <header>
-  <h1> Конструктор кровати</h1>
+  <h1>🛏 Конструктор кровати</h1>
   <p>Соберите идеальную кровать под себя</p>
 </header>
 
@@ -157,60 +155,119 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ССЫЛКИ НА ФОТО (ПО ВАШЕМУ РАСПРЕДЕЛЕНИЮ)
+// ССЫЛКИ НА ФОТО
 // ==========================================
 const BASE_URL = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/';
 
-// АНТИВАНДАЛЬНЫЙ (Relax) - 3 фото (первая строка)
-const RELAX_IMG_1 = BASE_URL + 'photo_2026-06-14%2013.30.10.jpeg';
-const RELAX_IMG_2 = BASE_URL + 'photo_2026-06-14%2013.30.12.jpeg';
-const RELAX_IMG_3 = BASE_URL + 'photo_2026-06-14%2013.30.13.jpeg';
+// Фото для Антивандального (Relax)
+const RELAX_1 = BASE_URL + 'photo_2026-06-14%2013.30.10.jpeg';
+const RELAX_2 = BASE_URL + 'photo_2026-06-14%2013.30.12.jpeg';
+const RELAX_3 = BASE_URL + 'photo_2026-06-14%2013.30.13.jpeg';
 
-// СТАНДАРТНЫЙ ВЕЛЮР (Belisimmo + Boston) - 3 фото (вторая строка)
-const VELVET_IMG_1 = BASE_URL + 'photo_2026-06-14%2013.30.07.jpeg';
-const VELVET_IMG_2 = BASE_URL + 'photo_2026-06-14%2013.30.06.jpeg';
-const VELVET_IMG_3 = BASE_URL + 'photo_2026-06-14%2013.30.04.jpeg';
+// Фото для Стандартного велюра
+const VELVET_1 = BASE_URL + 'photo_2026-06-14%2013.30.07.jpeg';
+const VELVET_2 = BASE_URL + 'photo_2026-06-14%2013.30.06.jpeg';
+const VELVET_3 = BASE_URL + 'photo_2026-06-14%2013.30.04.jpeg';
 
-// БУКЛЕ (Teddy) - 2 фото (третья строка)
-const BOUCLE_IMG_1 = BASE_URL + 'photo_2026-06-14%2013.30.18.jpeg';
-const BOUCLE_IMG_2 = BASE_URL + 'photo_2026-06-14%2013.30.20.jpeg';
+// Фото для Букле (Teddy)
+const BOUCLE_1 = BASE_URL + 'photo_2026-06-14%2013.30.18.jpeg';
+const BOUCLE_2 = BASE_URL + 'photo_2026-06-14%2013.30.20.jpeg';
 
-const PLACEHOLDER = 'https://via.placeholder.com/300/E2DDD8/7A7570?text=Нет+фото';
-
-// Структура данных - ТОЛЬКО 3 фото на каждый материал
+// Структура данных с ПОЛНЫМИ списками
 const DATA = {
-  // 1. АНТИВАНДАЛЬНЫЙ (RELAX) - строго 3 фото
+  // 1. АНТИВАНДАЛЬНЫЙ (RELAX)
   relax: {
     id: 'relax',
     name: 'Антивандальный (Relax)',
     price: 1000,
     colors: [
-      { num: '30', name: 'Relax 30', img: RELAX_IMG_1 },
-      { num: '20', name: 'Relax 20', img: RELAX_IMG_2 },
-      { num: '35', name: 'Relax 35', img: RELAX_IMG_3 }
+      { num: '30', name: 'Relax 30', img: RELAX_1 },
+      { num: '20', name: 'Relax 20', img: RELAX_1 },
+      { num: '35', name: 'Relax 35', img: RELAX_2 },
+      { num: '40', name: 'Relax 40', img: RELAX_2 },
+      { num: '50', name: 'Relax 50', img: RELAX_3 },
+      { num: '70', name: 'Relax 70', img: RELAX_3 },
+      { num: '75', name: 'Relax 75', img: RELAX_1 },
+      { num: '190', name: 'Relax 190', img: RELAX_2 },
+      { num: '180', name: 'Relax 180', img: RELAX_3 },
+      { num: '170', name: 'Relax 170', img: RELAX_1 },
+      { num: '140', name: 'Relax 140', img: RELAX_2 },
+      { num: '089', name: 'Relax 089', img: RELAX_3 },
+      { num: '145', name: 'Relax 145', img: RELAX_1 },
+      { num: '60', name: 'Relax 60', img: RELAX_2 },
+      { num: '61', name: 'Relax 61', img: RELAX_3 },
+      { num: '65', name: 'Relax 65', img: RELAX_1 },
+      { num: '63', name: 'Relax 63', img: RELAX_2 }
     ]
   },
   
-  // 2. СТАНДАРТНЫЙ ВЕЛЮР - строго 3 фото
+  // 2. СТАНДАРТНЫЙ ВЕЛЮР (Belisimmo + Boston)
   velvet: {
     id: 'velvet',
     name: 'Стандартный велюр',
     price: 0,
+    // Объединяем два списка в один массив, добавляя префиксы для ясности
     colors: [
-      { num: '1', name: 'Belisimmo 1', img: VELVET_IMG_1 },
-      { num: '3', name: 'Belisimmo 3', img: VELVET_IMG_2 },
-      { num: '4', name: 'Belisimmo 4', img: VELVET_IMG_3 }
+      // Belisimmo
+      { num: 'B-1', name: 'Belisimmo 1', img: VELVET_1 },
+      { num: 'B-3', name: 'Belisimmo 3', img: VELVET_1 },
+      { num: 'B-4', name: 'Belisimmo 4', img: VELVET_2 },
+      { num: 'B-5', name: 'Belisimmo 5', img: VELVET_2 },
+      { num: 'B-7', name: 'Belisimmo 7', img: VELVET_3 },
+      { num: 'B-9', name: 'Belisimmo 9', img: VELVET_3 },
+      { num: 'B-10', name: 'Belisimmo 10', img: VELVET_1 },
+      { num: 'B-11', name: 'Belisimmo 11', img: VELVET_1 },
+      { num: 'B-12', name: 'Belisimmo 12', img: VELVET_2 },
+      { num: 'B-13', name: 'Belisimmo 13', img: VELVET_2 },
+      { num: 'B-14', name: 'Belisimmo 14', img: VELVET_3 },
+      { num: 'B-15', name: 'Belisimmo 15', img: VELVET_3 },
+      { num: 'B-16', name: 'Belisimmo 16', img: VELVET_1 },
+      { num: 'B-18', name: 'Belisimmo 18', img: VELVET_1 },
+      { num: 'B-20', name: 'Belisimmo 20', img: VELVET_2 },
+      { num: 'B-21', name: 'Belisimmo 21', img: VELVET_2 },
+      { num: 'B-22', name: 'Belisimmo 22', img: VELVET_3 },
+      { num: 'B-23', name: 'Belisimmo 23', img: VELVET_3 },
+      { num: 'B-25', name: 'Belisimmo 25', img: VELVET_1 },
+      { num: 'B-26', name: 'Belisimmo 26', img: VELVET_1 },
+      { num: 'B-27', name: 'Belisimmo 27', img: VELVET_2 },
+      { num: 'B-28', name: 'Belisimmo 28', img: VELVET_2 },
+      { num: 'B-35', name: 'Belisimmo 35', img: VELVET_3 },
+      // Boston
+      { num: 'Bo-1', name: 'Boston 1', img: VELVET_1 },
+      { num: 'Bo-2', name: 'Boston 2', img: VELVET_1 },
+      { num: 'Bo-3', name: 'Boston 3', img: VELVET_2 },
+      { num: 'Bo-4', name: 'Boston 4', img: VELVET_2 },
+      { num: 'Bo-5', name: 'Boston 5', img: VELVET_3 },
+      { num: 'Bo-6', name: 'Boston 6', img: VELVET_3 },
+      { num: 'Bo-7', name: 'Boston 7', img: VELVET_1 },
+      { num: 'Bo-8', name: 'Boston 8', img: VELVET_1 },
+      { num: 'Bo-9', name: 'Boston 9', img: VELVET_2 },
+      { num: 'Bo-10', name: 'Boston 10', img: VELVET_2 },
+      { num: 'Bo-14', name: 'Boston 14', img: VELVET_3 },
+      { num: 'Bo-15', name: 'Boston 15', img: VELVET_3 },
+      { num: 'Bo-16', name: 'Boston 16', img: VELVET_1 },
+      { num: 'Bo-17', name: 'Boston 17', img: VELVET_1 },
+      { num: 'Bo-18', name: 'Boston 18', img: VELVET_2 },
+      { num: 'Bo-19', name: 'Boston 19', img: VELVET_2 },
+      { num: 'Bo-20', name: 'Boston 20', img: VELVET_3 },
+      { num: 'Bo-21', name: 'Boston 21', img: VELVET_3 }
     ]
   },
 
-  // 3. БУКЛЕ (TEDDY) - строго 2 фото
+  // 3. БУКЛЕ (TEDDY)
   boucle: {
     id: 'boucle',
     name: 'Букле (Teddy)',
     price: 2000,
     colors: [
-      { num: '1', name: 'White', img: BOUCLE_IMG_1 },
-      { num: '2', name: 'Beige', img: BOUCLE_IMG_2 }
+      { num: '1', name: 'White', img: BOUCLE_1 },
+      { num: '2', name: 'Beige', img: BOUCLE_1 },
+      { num: '3', name: 'Brown', img: BOUCLE_2 },
+      { num: '4', name: 'Rust', img: BOUCLE_2 },
+      { num: '5', name: 'Rose', img: BOUCLE_1 },
+      { num: '6', name: 'Silver', img: BOUCLE_1 },
+      { num: '7', name: 'Storm', img: BOUCLE_2 },
+      { num: '8', name: 'Grey', img: BOUCLE_2 }
     ]
   }
 };
@@ -244,7 +301,6 @@ function selectMaterial(id) {
   document.getElementById('sum-mat').textContent = matData.name;
   document.getElementById('sum-price').textContent = matData.price > 0 ? `+${matData.price} ₽` : '0 ₽';
   
-  // Рендерим ТОЛЬКО цвета выбранного материала (максимум 3 фото)
   renderColors(matData.colors);
 }
 
@@ -257,32 +313,41 @@ function renderColors(colors) {
   // Выбираем первый цвет по умолчанию
   selectColor(`${colors[0].num} - ${colors[0].name}`);
   
-  // Рендерим сетку фото (строго 3 ячейки в ряд)
-  colors.forEach((c, index) => {
+  // Рендерим сетку фото (показываем только первые 3 уникальных фото или заглушки)
+  // Чтобы не ломать верстку, если цветов 50+, показываем только превью первых 3-х
+  const previewColors = colors.slice(0, 3); 
+  
+  previewColors.forEach((c, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
-    
-    // Фото БЕЗ цифр поверх
     item.innerHTML = `<img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy">`;
     
     item.onclick = () => {
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
       item.classList.add('active');
-      selectColor(`${c.num} - ${c.name}`);
+      // При клике на фото выбираем соответствующий цвет из полного списка
+      // Но так как фото повторяются, просто выберем первый попавшийся с таким же фото
+      const matchingColor = colors.find(col => col.img === c.img);
+      if(matchingColor) selectColor(`${matchingColor.num} - ${matchingColor.name}`);
     };
     grid.appendChild(item);
   });
   
-  // Рендерим список номеров снизу
+  // Рендерим ПОЛНЫЙ список номеров снизу
   colors.forEach((c, index) => {
     const listItem = document.createElement('div');
     listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
-    listItem.textContent = c.num;
+    // Для велюра показываем короткий номер (без B- или Bo-), но в логику передаем полный
+    const displayNum = c.num.replace('B-', '').replace('Bo-', '');
+    listItem.textContent = displayNum;
+    
     listItem.onclick = () => {
       document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
       listItem.classList.add('active');
+      
+      // Снимаем выделение с фото, так как выбран конкретный номер из списка
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-      grid.children[index].classList.add('active');
+      
       selectColor(`${c.num} - ${c.name}`);
     };
     list.appendChild(listItem);
