@@ -26,8 +26,8 @@
   .mat-price { font-size: 0.9rem; color: var(--muted); }
   .mat-btn.active .mat-price { color: var(--accent); font-weight: bold; }
 
-  /* Сетка цветов (карточки с цифрами) */
-  .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  /* Сетка цветов */
+  .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
   @media(max-width: 400px) { .color-grid { grid-template-columns: repeat(2, 1fr); } }
   
   .color-item { 
@@ -37,17 +37,28 @@
   }
   .color-item.active { border-color: var(--accent); transform: scale(0.95); }
   
-  /* Цифра поверх фото */
   .color-number { 
     position: absolute; z-index: 2; font-size: 1.5rem; font-weight: bold; 
     color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); pointer-events: none;
   }
   
-  /* Само фото ткани */
   .color-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.8; }
   .color-item.active .color-img { opacity: 1; }
 
   .color-name { text-align: center; margin-top: 10px; font-weight: 600; color: var(--accent); min-height: 1.2em;}
+
+  /* Список номеров цветов */
+  .color-list { 
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; 
+    padding-top: 15px; border-top: 1px solid var(--border);
+  }
+  .color-list-item {
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px;
+    font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+    background: #fff;
+  }
+  .color-list-item:hover { background: var(--tag-bg); }
+  .color-list-item.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
   .field { margin-bottom: 15px; }
   .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
@@ -61,6 +72,17 @@
   .btn-submit:disabled { opacity: 0.6; }
   
   .success { display: none; text-align: center; padding: 3rem 1rem; }
+
+  /* Модальное окно для зума фото */
+  .zoom-modal {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    z-index: 1000; align-items: center; justify-content: center;
+    cursor: zoom-out;
+  }
+  .zoom-modal img {
+    max-width: 95vw; max-height: 95vh; object-fit: contain;
+    border-radius: 8px;
+  }
 </style>
 </head>
 <body>
@@ -83,6 +105,9 @@
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
     <div class="color-name" id="selected-color-name">Выберите цвет</div>
+    
+    <!-- Список номеров цветов -->
+    <div class="color-list" id="color-list"></div>
   </div>
 
   <!-- 3. Размер -->
@@ -126,6 +151,11 @@
   <button class="btn-submit" onclick="location.reload()" style="background: transparent; border: 2px solid var(--accent); color: var(--accent);">Новый заказ</button>
 </div>
 
+<!-- Модальное окно для зума -->
+<div class="zoom-modal" id="zoom-modal" onclick="closeZoom()">
+  <img src="" alt="Zoom" id="zoom-img">
+</div>
+
 <script>
 // ==========================================
 // НАСТРОЙКИ TELEGRAM
@@ -136,7 +166,6 @@ const CHAT_ID = '5210823670';
 // ==========================================
 // ДАННЫЕ О ТКАНЯХ И ЦВЕТАХ
 // ==========================================
-// Ссылки на фото (raw.githubusercontent.com)
 const IMG_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
 const IMG_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
 const IMG_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
@@ -146,7 +175,6 @@ const IMG_6 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/pho
 const IMG_7 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
 const IMG_8 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
 
-// Заглушка, если фото не хватает
 const PLACEHOLDER = 'https://via.placeholder.com/300/E2DDD8/7A7570?text=No+Photo';
 
 const DATA = {
@@ -168,7 +196,6 @@ const DATA = {
   },
   
   // СТАНДАРТНЫЙ ВЕЛЮР (Belisimmo + Boston)
-  // Всего 8 фото. Распределил их по первым 8 номерам из вашего списка.
   velvet: {
     id: 'velvet',
     name: 'Стандартный велюр',
@@ -182,11 +209,14 @@ const DATA = {
       { num: '9', name: 'Belisimmo 9', img: IMG_6 },
       { num: '10', name: 'Belisimmo 10', img: IMG_7 },
       { num: '11', name: 'Belisimmo 11', img: IMG_8 },
-      // Для остальных номеров пока стоит заглушка, пока не загрузите новые фото
       { num: '12', name: 'Boston 12', img: PLACEHOLDER },
       { num: '13', name: 'Boston 13', img: PLACEHOLDER },
       { num: '14', name: 'Boston 14', img: PLACEHOLDER },
-      { num: '15', name: 'Boston 15', img: PLACEHOLDER }
+      { num: '15', name: 'Boston 15', img: PLACEHOLDER },
+      { num: '16', name: 'Boston 16', img: PLACEHOLDER },
+      { num: '18', name: 'Boston 18', img: PLACEHOLDER },
+      { num: '20', name: 'Boston 20', img: PLACEHOLDER },
+      { num: '21', name: 'Boston 21', img: PLACEHOLDER }
     ]
   },
 
@@ -203,8 +233,16 @@ const DATA = {
       { num: '50', name: 'Relax 50', img: IMG_5 },
       { num: '70', name: 'Relax 70', img: IMG_6 },
       { num: '75', name: 'Relax 75', img: IMG_7 },
-      { num: '190', name: 'Relax 190', img: IMG_8 }
-      // Остальные номера Relax можно добавить аналогично, когда будут фото
+      { num: '190', name: 'Relax 190', img: IMG_8 },
+      { num: '180', name: 'Relax 180', img: PLACEHOLDER },
+      { num: '170', name: 'Relax 170', img: PLACEHOLDER },
+      { num: '140', name: 'Relax 140', img: PLACEHOLDER },
+      { num: '089', name: 'Relax 089', img: PLACEHOLDER },
+      { num: '145', name: 'Relax 145', img: PLACEHOLDER },
+      { num: '60', name: 'Relax 60', img: PLACEHOLDER },
+      { num: '61', name: 'Relax 61', img: PLACEHOLDER },
+      { num: '65', name: 'Relax 65', img: PLACEHOLDER },
+      { num: '63', name: 'Relax 63', img: PLACEHOLDER }
     ]
   }
 };
@@ -240,23 +278,47 @@ function selectMaterial(id) {
 
 function renderColors(colors) {
   const grid = document.getElementById('color-grid');
+  const list = document.getElementById('color-list');
   grid.innerHTML = '';
-  selectColor(colors[0].name); // Выбираем первый по умолчанию
+  list.innerHTML = '';
   
+  // Выбираем первый цвет по умолчанию
+  selectColor(`${colors[0].num} - ${colors[0].name}`);
+  
+  // Рендерим сетку фото
   colors.forEach((c, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
-    // Карточка с фото и цифрой
     item.innerHTML = `
-      <img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy">
+      <img src="${c.img}" class="color-img" alt="${c.num}" loading="lazy" onclick="openZoom('${c.img}')">
       <span class="color-number">${c.num}</span>
     `;
-    item.onclick = () => {
-      document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-      item.classList.add('active');
-      selectColor(`${c.num} - ${c.name}`);
+    item.onclick = (e) => {
+      if(e.target.tagName !== 'IMG') {
+        document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+        item.classList.add('active');
+        selectColor(`${c.num} - ${c.name}`);
+      }
     };
     grid.appendChild(item);
+  });
+  
+  // Рендерим список номеров
+  colors.forEach((c, index) => {
+    const listItem = document.createElement('div');
+    listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
+    listItem.textContent = c.num;
+    listItem.onclick = () => {
+      document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
+      listItem.classList.add('active');
+      
+      // Также активируем соответствующую карточку в сетке
+      document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
+      grid.children[index].classList.add('active');
+      
+      selectColor(`${c.num} - ${c.name}`);
+    };
+    list.appendChild(listItem);
   });
 }
 
@@ -271,6 +333,18 @@ function updateSummary() {
   document.getElementById('sum-size').textContent = state.size;
 }
 
+// Функции для зума фото
+function openZoom(imgSrc) {
+  const modal = document.getElementById('zoom-modal');
+  const img = document.getElementById('zoom-img');
+  img.src = imgSrc;
+  modal.style.display = 'flex';
+}
+
+function closeZoom() {
+  document.getElementById('zoom-modal').style.display = 'none';
+}
+
 async function sendOrder() {
   const name = document.getElementById('f-name').value;
   const phone = document.getElementById('f-phone').value;
@@ -282,7 +356,7 @@ async function sendOrder() {
   const matData = DATA[state.mat];
   const comment = document.getElementById('f-comment').value;
   
-  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Доплата: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
+  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n *Имя:* ${name}\n *Телефон:* ${phone}\n\n *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Доплата: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
   
   try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
