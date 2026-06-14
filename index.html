@@ -66,15 +66,24 @@
   
   .success { display: none; text-align: center; padding: 3rem 1rem; }
 
-  /* Зум фото */
+  /* === СТИЛИ ДЛЯ ЗУМА (УВЕЛИЧЕНИЯ ФОТО) === */
   .zoom-modal {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-    z-index: 1000; align-items: center; justify-content: center;
-    cursor: zoom-out;
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.95); /* Темный фон */
+    z-index: 1000; 
+    align-items: center; 
+    justify-content: center;
+    cursor: zoom-out; /* Курсор показывает, что можно закрыть */
+    padding: 20px;
   }
   .zoom-modal img {
-    max-width: 95vw; max-height: 95vh; object-fit: contain;
+    max-width: 100%; 
+    max-height: 90vh; 
+    object-fit: contain;
     border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
 </style>
 </head>
@@ -142,7 +151,7 @@
   <button class="btn-submit" onclick="location.reload()" style="background: transparent; border: 2px solid var(--accent); color: var(--accent);">Новый заказ</button>
 </div>
 
-<!-- Модальное окно для зума -->
+<!-- Модальное окно для зума (скрыто по умолчанию) -->
 <div class="zoom-modal" id="zoom-modal" onclick="closeZoom()">
   <img src="" alt="Zoom" id="zoom-img">
 </div>
@@ -155,120 +164,70 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ВСЕ ССЫЛКИ НА ФОТО (ВСТАВЛЕНЫ)
+// ВСЕ ССЫЛКИ НА ФОТО
 // ==========================================
-
-// Антивандальный (Relax) - 3 ссылки
 const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
 const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
 const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
 
-// Стандартный велюр - Belisimmo (1 ссылка)
 const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg';
 
-// Стандартный велюр - Boston (2 ссылки)
 const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg';
 const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg';
 
-// Букле (Teddy) - 2 ссылки
 const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
 const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
 
-// Структура данных с ПОЛНЫМИ списками и правильными фото
+// Структура данных
 const DATA = {
-  // 1. АНТИВАНДАЛЬНЫЙ (RELAX)
   relax: {
-    id: 'relax',
-    name: 'Антивандальный (Relax)',
-    price: 1000,
+    id: 'relax', name: 'Антивандальный (Relax)', price: 1000,
     colors: [
-      { num: '30', name: 'Relax 30', img: RELAX_1 },
-      { num: '20', name: 'Relax 20', img: RELAX_1 },
-      { num: '35', name: 'Relax 35', img: RELAX_2 },
-      { num: '40', name: 'Relax 40', img: RELAX_2 },
-      { num: '50', name: 'Relax 50', img: RELAX_3 },
-      { num: '70', name: 'Relax 70', img: RELAX_3 },
-      { num: '75', name: 'Relax 75', img: RELAX_1 },
-      { num: '190', name: 'Relax 190', img: RELAX_2 },
-      { num: '180', name: 'Relax 180', img: RELAX_3 },
-      { num: '170', name: 'Relax 170', img: RELAX_1 },
-      { num: '140', name: 'Relax 140', img: RELAX_2 },
-      { num: '089', name: 'Relax 089', img: RELAX_3 },
-      { num: '145', name: 'Relax 145', img: RELAX_1 },
-      { num: '60', name: 'Relax 60', img: RELAX_2 },
-      { num: '61', name: 'Relax 61', img: RELAX_3 },
-      { num: '65', name: 'Relax 65', img: RELAX_1 },
+      { num: '30', name: 'Relax 30', img: RELAX_1 }, { num: '20', name: 'Relax 20', img: RELAX_1 },
+      { num: '35', name: 'Relax 35', img: RELAX_2 }, { num: '40', name: 'Relax 40', img: RELAX_2 },
+      { num: '50', name: 'Relax 50', img: RELAX_3 }, { num: '70', name: 'Relax 70', img: RELAX_3 },
+      { num: '75', name: 'Relax 75', img: RELAX_1 }, { num: '190', name: 'Relax 190', img: RELAX_2 },
+      { num: '180', name: 'Relax 180', img: RELAX_3 }, { num: '170', name: 'Relax 170', img: RELAX_1 },
+      { num: '140', name: 'Relax 140', img: RELAX_2 }, { num: '089', name: 'Relax 089', img: RELAX_3 },
+      { num: '145', name: 'Relax 145', img: RELAX_1 }, { num: '60', name: 'Relax 60', img: RELAX_2 },
+      { num: '61', name: 'Relax 61', img: RELAX_3 }, { num: '65', name: 'Relax 65', img: RELAX_1 },
       { num: '63', name: 'Relax 63', img: RELAX_2 }
     ]
   },
-  
-  // 2. СТАНДАРТНЫЙ ВЕЛЮР (Belisimmo + Boston)
   velvet: {
-    id: 'velvet',
-    name: 'Стандартный велюр',
-    price: 0,
+    id: 'velvet', name: 'Стандартный велюр', price: 0,
     colors: [
-      // Belisimmo (используем BELISIMMO_1)
-      { num: 'B-1', name: 'Belisimmo 1', img: BELISIMMO_1 },
-      { num: 'B-3', name: 'Belisimmo 3', img: BELISIMMO_1 },
-      { num: 'B-4', name: 'Belisimmo 4', img: BELISIMMO_1 },
-      { num: 'B-5', name: 'Belisimmo 5', img: BELISIMMO_1 },
-      { num: 'B-7', name: 'Belisimmo 7', img: BELISIMMO_1 },
-      { num: 'B-9', name: 'Belisimmo 9', img: BELISIMMO_1 },
-      { num: 'B-10', name: 'Belisimmo 10', img: BELISIMMO_1 },
-      { num: 'B-11', name: 'Belisimmo 11', img: BELISIMMO_1 },
-      { num: 'B-12', name: 'Belisimmo 12', img: BELISIMMO_1 },
-      { num: 'B-13', name: 'Belisimmo 13', img: BELISIMMO_1 },
-      { num: 'B-14', name: 'Belisimmo 14', img: BELISIMMO_1 },
-      { num: 'B-15', name: 'Belisimmo 15', img: BELISIMMO_1 },
-      { num: 'B-16', name: 'Belisimmo 16', img: BELISIMMO_1 },
-      { num: 'B-18', name: 'Belisimmo 18', img: BELISIMMO_1 },
-      { num: 'B-20', name: 'Belisimmo 20', img: BELISIMMO_1 },
-      { num: 'B-21', name: 'Belisimmo 21', img: BELISIMMO_1 },
-      { num: 'B-22', name: 'Belisimmo 22', img: BELISIMMO_1 },
-      { num: 'B-23', name: 'Belisimmo 23', img: BELISIMMO_1 },
-      { num: 'B-25', name: 'Belisimmo 25', img: BELISIMMO_1 },
-      { num: 'B-26', name: 'Belisimmo 26', img: BELISIMMO_1 },
-      { num: 'B-27', name: 'Belisimmo 27', img: BELISIMMO_1 },
-      { num: 'B-28', name: 'Belisimmo 28', img: BELISIMMO_1 },
+      { num: 'B-1', name: 'Belisimmo 1', img: BELISIMMO_1 }, { num: 'B-3', name: 'Belisimmo 3', img: BELISIMMO_1 },
+      { num: 'B-4', name: 'Belisimmo 4', img: BELISIMMO_1 }, { num: 'B-5', name: 'Belisimmo 5', img: BELISIMMO_1 },
+      { num: 'B-7', name: 'Belisimmo 7', img: BELISIMMO_1 }, { num: 'B-9', name: 'Belisimmo 9', img: BELISIMMO_1 },
+      { num: 'B-10', name: 'Belisimmo 10', img: BELISIMMO_1 }, { num: 'B-11', name: 'Belisimmo 11', img: BELISIMMO_1 },
+      { num: 'B-12', name: 'Belisimmo 12', img: BELISIMMO_1 }, { num: 'B-13', name: 'Belisimmo 13', img: BELISIMMO_1 },
+      { num: 'B-14', name: 'Belisimmo 14', img: BELISIMMO_1 }, { num: 'B-15', name: 'Belisimmo 15', img: BELISIMMO_1 },
+      { num: 'B-16', name: 'Belisimmo 16', img: BELISIMMO_1 }, { num: 'B-18', name: 'Belisimmo 18', img: BELISIMMO_1 },
+      { num: 'B-20', name: 'Belisimmo 20', img: BELISIMMO_1 }, { num: 'B-21', name: 'Belisimmo 21', img: BELISIMMO_1 },
+      { num: 'B-22', name: 'Belisimmo 22', img: BELISIMMO_1 }, { num: 'B-23', name: 'Belisimmo 23', img: BELISIMMO_1 },
+      { num: 'B-25', name: 'Belisimmo 25', img: BELISIMMO_1 }, { num: 'B-26', name: 'Belisimmo 26', img: BELISIMMO_1 },
+      { num: 'B-27', name: 'Belisimmo 27', img: BELISIMMO_1 }, { num: 'B-28', name: 'Belisimmo 28', img: BELISIMMO_1 },
       { num: 'B-35', name: 'Belisimmo 35', img: BELISIMMO_1 },
       
-      // Boston (чередую BOSTON_1 и BOSTON_2)
-      { num: 'Bo-1', name: 'Boston 1', img: BOSTON_1 },
-      { num: 'Bo-2', name: 'Boston 2', img: BOSTON_2 },
-      { num: 'Bo-3', name: 'Boston 3', img: BOSTON_1 },
-      { num: 'Bo-4', name: 'Boston 4', img: BOSTON_2 },
-      { num: 'Bo-5', name: 'Boston 5', img: BOSTON_1 },
-      { num: 'Bo-6', name: 'Boston 6', img: BOSTON_2 },
-      { num: 'Bo-7', name: 'Boston 7', img: BOSTON_1 },
-      { num: 'Bo-8', name: 'Boston 8', img: BOSTON_2 },
-      { num: 'Bo-9', name: 'Boston 9', img: BOSTON_1 },
-      { num: 'Bo-10', name: 'Boston 10', img: BOSTON_2 },
-      { num: 'Bo-14', name: 'Boston 14', img: BOSTON_1 },
-      { num: 'Bo-15', name: 'Boston 15', img: BOSTON_2 },
-      { num: 'Bo-16', name: 'Boston 16', img: BOSTON_1 },
-      { num: 'Bo-17', name: 'Boston 17', img: BOSTON_2 },
-      { num: 'Bo-18', name: 'Boston 18', img: BOSTON_1 },
-      { num: 'Bo-19', name: 'Boston 19', img: BOSTON_2 },
-      { num: 'Bo-20', name: 'Boston 20', img: BOSTON_1 },
-      { num: 'Bo-21', name: 'Boston 21', img: BOSTON_2 }
+      { num: 'Bo-1', name: 'Boston 1', img: BOSTON_1 }, { num: 'Bo-2', name: 'Boston 2', img: BOSTON_2 },
+      { num: 'Bo-3', name: 'Boston 3', img: BOSTON_1 }, { num: 'Bo-4', name: 'Boston 4', img: BOSTON_2 },
+      { num: 'Bo-5', name: 'Boston 5', img: BOSTON_1 }, { num: 'Bo-6', name: 'Boston 6', img: BOSTON_2 },
+      { num: 'Bo-7', name: 'Boston 7', img: BOSTON_1 }, { num: 'Bo-8', name: 'Boston 8', img: BOSTON_2 },
+      { num: 'Bo-9', name: 'Boston 9', img: BOSTON_1 }, { num: 'Bo-10', name: 'Boston 10', img: BOSTON_2 },
+      { num: 'Bo-14', name: 'Boston 14', img: BOSTON_1 }, { num: 'Bo-15', name: 'Boston 15', img: BOSTON_2 },
+      { num: 'Bo-16', name: 'Boston 16', img: BOSTON_1 }, { num: 'Bo-17', name: 'Boston 17', img: BOSTON_2 },
+      { num: 'Bo-18', name: 'Boston 18', img: BOSTON_1 }, { num: 'Bo-19', name: 'Boston 19', img: BOSTON_2 },
+      { num: 'Bo-20', name: 'Boston 20', img: BOSTON_1 }, { num: 'Bo-21', name: 'Boston 21', img: BOSTON_2 }
     ]
   },
-
-  // 3. БУКЛЕ (TEDDY)
   boucle: {
-    id: 'boucle',
-    name: 'Букле (Teddy)',
-    price: 2000,
+    id: 'boucle', name: 'Букле (Teddy)', price: 2000,
     colors: [
-      { num: '1', name: 'White', img: BOUCLE_1 },
-      { num: '2', name: 'Beige', img: BOUCLE_1 },
-      { num: '3', name: 'Brown', img: BOUCLE_2 },
-      { num: '4', name: 'Rust', img: BOUCLE_2 },
-      { num: '5', name: 'Rose', img: BOUCLE_1 },
-      { num: '6', name: 'Silver', img: BOUCLE_1 },
-      { num: '7', name: 'Storm', img: BOUCLE_2 },
-      { num: '8', name: 'Grey', img: BOUCLE_2 }
+      { num: '1', name: 'White', img: BOUCLE_1 }, { num: '2', name: 'Beige', img: BOUCLE_1 },
+      { num: '3', name: 'Brown', img: BOUCLE_2 }, { num: '4', name: 'Rust', img: BOUCLE_2 },
+      { num: '5', name: 'Rose', img: BOUCLE_1 }, { num: '6', name: 'Silver', img: BOUCLE_1 },
+      { num: '7', name: 'Storm', img: BOUCLE_2 }, { num: '8', name: 'Grey', img: BOUCLE_2 }
     ]
   }
 };
@@ -311,36 +270,39 @@ function renderColors(colors) {
   grid.innerHTML = '';
   list.innerHTML = '';
   
-  // Выбираем первый цвет по умолчанию
   selectColor(`${colors[0].num} - ${colors[0].name}`);
   
-  // Рендерим сетку фото (показываем только первые 3 уникальных фото)
+  // Показываем только уникальные фото (максимум 3)
   const uniqueImages = [...new Set(colors.map(c => c.img))].slice(0, 3);
   
   uniqueImages.forEach((imgSrc, index) => {
     const item = document.createElement('div');
     item.className = 'color-item' + (index === 0 ? ' active' : '');
+    // Добавляем onclick для открытия зума
     item.innerHTML = `<img src="${imgSrc}" class="color-img" alt="Color" loading="lazy">`;
     
     item.onclick = () => {
+      // Открываем зум
+      openZoom(imgSrc);
+      
+      // Также выбираем этот цвет (находим первый попавшийся с таким фото)
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
       item.classList.add('active');
-      // Находим первый цвет с этим фото
       const firstColorWithImg = colors.find(c => c.img === imgSrc);
       if(firstColorWithImg) selectColor(`${firstColorWithImg.num} - ${firstColorWithImg.name}`);
     };
     grid.appendChild(item);
   });
   
-  // Рендерим ПОЛНЫЙ список номеров снизу
+  // Рендерим полный список номеров
   colors.forEach((c, index) => {
     const listItem = document.createElement('div');
     listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
-    // Убираем префиксы B- и Bo- для отображения, оставляем чистый номер
     const displayNum = c.num.replace('B-', '').replace('Bo-', '');
     listItem.textContent = displayNum;
     
-    listItem.onclick = () => {
+    listItem.onclick = (e) => {
+      e.stopPropagation(); // Чтобы клик не всплывал
       document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
       listItem.classList.add('active');
       document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
@@ -361,7 +323,7 @@ function updateSummary() {
   document.getElementById('sum-size').textContent = state.size;
 }
 
-// Зум фото
+// === ФУНКЦИИ ДЛЯ ЗУМА ===
 function openZoom(imgSrc) {
   const modal = document.getElementById('zoom-modal');
   const img = document.getElementById('zoom-img');
