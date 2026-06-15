@@ -63,7 +63,8 @@
   /* Итог */
   .summary { background: var(--tag-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
   .sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-  .sum-row:last-child { margin-bottom: 0; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; }
+  .sum-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--accent); font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+  .sum-row:last-child:not(.total) { margin-bottom: 0; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; }
   
   .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
   .btn-submit:disabled { opacity: 0.6; }
@@ -110,6 +111,7 @@
         <option value="180x200">180 x 200 см</option>
       </select>
     </div>
+    <div style="font-size: 0.9rem; color: var(--muted); margin-top: 5px;" id="size-price-hint"></div>
   </div>
 
   <!-- 4. Дизайн изголовья -->
@@ -137,7 +139,9 @@
     <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
     <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Не выбрано</span></div>
-    <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-price">0 ₽</span></div>
+    <div class="sum-row"><span>Стоимость кровати:</span> <span id="sum-bed-price">-</span></div>
+    <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-fabric-price">0 ₽</span></div>
+    <div class="sum-row total"><span>ИТОГО:</span> <span id="sum-total">-</span></div>
   </div>
 
   <button class="btn-submit" onclick="sendOrder()" id="btn-send">Отправить заказ</button>
@@ -162,7 +166,25 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ (ВСЕ ССЫЛКИ)
+// ЦЕНЫ НА ИЗГОЛОВЬЯ (БАЗОВАЯ ЦЕНА В СТАНДАРТНОМ ВЕЛЮРЕ)
+// ==========================================
+const HEADBOARD_PRICES = {
+  'Стандарт': { small: 16000, large: 17500 }, // <=160x200 / 180x200
+  'Каретная стяжка (пуговицы/стразы)': { small: 21000, large: 22500 },
+  'Геометрия': { small: 18000, large: 19500 },
+  'Заборчики': { small: 18000, large: 19500 },
+  'Дольки 6 штук': { small: 18000, large: 19500 },
+  'Дольки 8 штук': { small: 18000, large: 19500 },
+  'Облачко': { small: 18000, large: 19500 },
+  'Облачко более закругленное': { small: 18000, large: 19500 },
+  'Детские кровати': { small: null, large: null } // Индивидуально
+};
+
+// Размеры, которые считаются "большими" (180x200)
+const LARGE_SIZES = ['180x200'];
+
+// ==========================================
+// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg',
@@ -171,7 +193,6 @@ const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10%20(1).jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10.jpeg'
 ];
-
 const HB_STANDARD = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.47.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.48.jpeg',
@@ -181,7 +202,6 @@ const HB_STANDARD = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.52.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.53.jpeg'
 ];
-
 const HB_FENCE = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.47.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.49.jpeg',
@@ -190,7 +210,6 @@ const HB_FENCE = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54%20(1).jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54.jpeg'
 ];
-
 const HB_SLICES_6 = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.12.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.08.jpeg',
@@ -199,14 +218,12 @@ const HB_SLICES_6 = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.04.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.03.jpeg'
 ];
-
 const HB_SLICES_8 = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.31.48.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.34.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.36.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.37.jpeg'
 ];
-
 const HB_CAPITONE = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.29.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.30.jpeg',
@@ -217,7 +234,6 @@ const HB_CAPITONE = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.39.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.40.jpeg'
 ];
-
 const HB_KIDS = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.34.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.36.jpeg',
@@ -227,7 +243,6 @@ const HB_KIDS = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.47.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.56.jpeg'
 ];
-
 const HB_CLOUD = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.14.59.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.00.jpeg',
@@ -237,7 +252,6 @@ const HB_CLOUD = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.05.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.06.jpeg'
 ];
-
 const HB_CLOUD_ROUND = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.56.jpeg',
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.54.jpeg',
@@ -245,19 +259,13 @@ const HB_CLOUD_ROUND = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.50.jpeg'
 ];
 
-// Маппинг названий на массивы фото
 const DESIGNS_WITH_PHOTOS = {
-  'Геометрия': HB_GEOMETRY,
-  'Стандарт': HB_STANDARD,
-  'Заборчики': HB_FENCE,
-  'Дольки 6 штук': HB_SLICES_6,
-  'Дольки 8 штук': HB_SLICES_8,
+  'Геометрия': HB_GEOMETRY, 'Стандарт': HB_STANDARD, 'Заборчики': HB_FENCE,
+  'Дольки 6 штук': HB_SLICES_6, 'Дольки 8 штук': HB_SLICES_8,
   'Каретная стяжка (пуговицы/стразы)': HB_CAPITONE,
-  'Детские кровати': HB_KIDS,
-  'Облачко': HB_CLOUD,
+  'Детские кровати': HB_KIDS, 'Облачко': HB_CLOUD,
   'Облачко более закругленное': HB_CLOUD_ROUND
 };
-
 const ALL_DESIGNS = Object.keys(DESIGNS_WITH_PHOTOS);
 
 // ==========================================
@@ -330,6 +338,7 @@ function init() {
   renderMaterials();
   renderDesignButtons();
   selectMaterial('relax');
+  updateSummary();
 }
 
 function renderMaterials() {
@@ -367,17 +376,16 @@ function selectDesign(name, btnElement) {
   const colorCard = document.getElementById('card-color');
   
   if (photos && photos.length > 0) {
-    // Есть фото -> показываем галерею, скрываем выбор цвета
     hbView.style.display = 'block';
     colorCard.classList.remove('visible');
     renderHeadboardGallery(name, photos);
     document.getElementById('sum-design').textContent = name + ' (выберите фото)';
   } else {
-    // Нет фото -> показываем выбор цвета
     hbView.style.display = 'none';
     colorCard.classList.add('visible');
     document.getElementById('sum-design').textContent = name;
   }
+  updateSummary();
 }
 
 function renderHeadboardGallery(designName, photos) {
@@ -407,8 +415,8 @@ function selectMaterial(id) {
   document.getElementById(`btn-${id}`).classList.add('active');
   const matData = DATA[id];
   document.getElementById('sum-mat').textContent = matData.name;
-  document.getElementById('sum-price').textContent = matData.price > 0 ? `+${matData.price} ₽` : '0 ₽';
   renderColors(matData.colors);
+  updateSummary();
 }
 
 function renderColors(colors) {
@@ -454,9 +462,54 @@ function selectColor(name) {
   document.getElementById('sum-color').textContent = name;
 }
 
+// ==========================================
+// ЛОГИКА РАСЧЕТА ЦЕНЫ
+// ==========================================
+function getBedPrice() {
+  if (!state.design || !HEADBOARD_PRICES[state.design]) return null;
+  
+  const prices = HEADBOARD_PRICES[state.design];
+  if (prices.small === null) return null; // Детские кровати
+  
+  const isLarge = LARGE_SIZES.includes(state.size);
+  return isLarge ? prices.large : prices.small;
+}
+
+function formatPrice(price) {
+  if (price === null) return 'Индивидуально';
+  return price.toLocaleString('ru-RU') + ' ₽';
+}
+
 function updateSummary() {
   state.size = document.getElementById('size-select').value;
   document.getElementById('sum-size').textContent = state.size;
+  
+  const matData = DATA[state.mat];
+  const fabricPrice = matData.price;
+  const bedPrice = getBedPrice();
+  
+  // Обновляем подсказку под размером
+  const hintEl = document.getElementById('size-price-hint');
+  if (bedPrice !== null) {
+    hintEl.textContent = `Базовая цена (${state.design || '...'}): ${formatPrice(bedPrice)}`;
+  } else if (state.design === 'Детские кровати') {
+    hintEl.textContent = 'Цена рассчитывается индивидуально';
+  } else {
+    hintEl.textContent = 'Выберите дизайн изголовья для расчета цены';
+  }
+  
+  // Обновляем сводку
+  document.getElementById('sum-bed-price').textContent = formatPrice(bedPrice);
+  document.getElementById('sum-fabric-price').textContent = fabricPrice > 0 ? `+${fabricPrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
+  
+  // Итого
+  const totalEl = document.getElementById('sum-total');
+  if (bedPrice === null) {
+    totalEl.textContent = 'Индивидуально';
+  } else {
+    const total = bedPrice + fabricPrice;
+    totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+  }
 }
 
 function openZoom(imgSrc) {
@@ -480,8 +533,19 @@ async function sendOrder() {
   
   const matData = DATA[state.mat];
   const comment = document.getElementById('f-comment').value;
+  const bedPrice = getBedPrice();
+  const fabricPrice = matData.price;
+  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice : null;
   
-  const text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Доплата за ткань: ${matData.price} руб.\n\n💬 *Коммент:* ${comment || 'Нет'}`;
+  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
+  
+  if (totalPrice !== null) {
+    text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
+  } else {
+    text += `💰 *ИТОГО: Рассчитывается индивидуально*\n`;
+  }
+  
+  text += `\n💬 *Коммент:* ${comment || 'Нет'}`;
   
   try {
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
