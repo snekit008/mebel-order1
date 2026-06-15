@@ -13,7 +13,7 @@
   .container { max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem; }
   
   /* Карточки */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: block; } /* ВСЕГДА BLOCK */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: block; }
   .card-title { font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.05em; }
   
   /* Материалы */
@@ -54,6 +54,18 @@
   .hb-item.active { border-color: var(--accent); transform: scale(0.95); }
   .hb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  /* Комплектация основания */
+  .base-list { display: flex; flex-direction: column; gap: 10px; }
+  .base-btn { 
+    padding: 14px; border: 2px solid var(--border); border-radius: 10px; 
+    background: #fff; text-align: left; cursor: pointer; transition: 0.2s;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .base-btn.active { border-color: var(--accent); background: var(--tag-bg); }
+  .base-name { font-weight: 500; font-size: 0.95rem; }
+  .base-price { font-size: 0.9rem; color: var(--muted); white-space: nowrap; margin-left: 10px; }
+  .base-btn.active .base-price { color: var(--accent); font-weight: bold; }
+
   /* Поля ввода */
   .field { margin-bottom: 15px; }
   .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
@@ -62,7 +74,7 @@
   /* Итог */
   .summary { background: var(--tag-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
   .sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-  .sum-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--accent); font-size: 1.3rem; font-weight: 900; color: var(--accent); }
+  .sum-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--accent); font-size: 1.5rem; font-weight: 900; color: var(--accent); }
   .sum-row:last-child:not(.total) { margin-bottom: 0; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; }
   
   .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
@@ -89,7 +101,7 @@
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН, НЕ СКРЫВАЕТСЯ) -->
+  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН) -->
   <div class="card" id="card-color">
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
@@ -101,7 +113,6 @@
   <div class="card" id="card-size">
     <div class="card-title">3. Размер спального места</div>
     <div class="field">
-      <!-- Уменьшенный шрифт для селекта через style -->
       <select id="size-select" onchange="updateSummary()" style="font-size: 0.95rem;">
         <option value="80x200">80 x 200 см</option>
         <option value="90x200">90 x 200 см</option>
@@ -119,16 +130,21 @@
     <div class="card-title">4. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
     
-    <!-- Галерея появляется ЗДЕСЬ, под кнопками -->
     <div id="headboard-view" style="display:none;">
       <div class="headboard-gallery" id="hb-gallery"></div>
       <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-hb-name">Выберите вариант</div>
     </div>
   </div>
 
-  <!-- 5. Контакты -->
+  <!-- 5. Комплектация основания (НОВЫЙ БЛОК) -->
+  <div class="card" id="card-base">
+    <div class="card-title">5. Комплектация основания</div>
+    <div class="base-list" id="base-list"></div>
+  </div>
+
+  <!-- 6. Контакты -->
   <div class="card" id="card-contact">
-    <div class="card-title">5. Ваши данные</div>
+    <div class="card-title">6. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
     <div class="field"><input type="tel" id="f-phone" placeholder="+7 (999) 000-00-00"></div>
     <div class="field"><textarea id="f-comment" rows="3" placeholder="Комментарий (адрес, этаж)"></textarea></div>
@@ -140,6 +156,7 @@
     <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
     <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Не выбрано</span></div>
+    <div class="sum-row"><span>Основание:</span> <span id="sum-base">Щитовое (входит в стоимость)</span></div>
     <div class="sum-row"><span>Стоимость кровати:</span> <span id="sum-bed-price">-</span></div>
     <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-fabric-price">0 ₽</span></div>
     <div class="sum-row total"><span>ИТОГО:</span> <span id="sum-total">-</span></div>
@@ -184,9 +201,20 @@ const HEADBOARD_PRICES = {
 const LARGE_SIZES = ['180x200'];
 
 // ==========================================
+// ВАРИАНТЫ ОСНОВАНИЯ
+// ==========================================
+const BASE_OPTIONS = [
+  { id: 'shield', name: 'Щитовое основание', price: 0, note: '(входит в стоимость)' },
+  { id: 'ortho', name: 'Ортопедическое на ножках', price: 3000, note: '' },
+  { id: 'lift', name: 'С подъемным механизмом (ортопед.)', price: 9000, note: '' },
+  { id: 'lift-half', name: 'С подъемным + отсек на полкровати', price: 10000, note: '' },
+  { id: 'lift-full', name: 'С подъемным + отсек на всю кровать', price: 11000, note: '' }
+];
+
+// ==========================================
 // ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const V = '?v=4'; // Версия для сброса кэша
+const V = '?v=5'; // Версия для сброса кэша
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
@@ -333,11 +361,12 @@ const DATA = {
   }
 };
 
-let state = { mat: 'relax', colorName: '', size: '140x200', design: '' };
+let state = { mat: 'relax', colorName: '', size: '140x200', design: '', base: 'shield' };
 
 function init() {
   renderMaterials();
   renderDesignButtons();
+  renderBaseOptions();
   selectMaterial('relax');
   updateSummary();
 }
@@ -375,8 +404,6 @@ function selectDesign(name, btnElement) {
   const photos = DESIGNS_WITH_PHOTOS[name];
   const hbView = document.getElementById('headboard-view');
   
-  // ВАЖНОЕ ИЗМЕНЕНИЕ: Больше не трогаем card-color!
-  // Просто показываем или скрываем галерею изголовья
   if (photos && photos.length > 0) {
     hbView.style.display = 'block';
     renderHeadboardGallery(name, photos);
@@ -407,6 +434,36 @@ function renderHeadboardGallery(designName, photos) {
     };
     gallery.appendChild(item);
   });
+}
+
+function renderBaseOptions() {
+  const container = document.getElementById('base-list');
+  container.innerHTML = '';
+  BASE_OPTIONS.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'base-btn' + (opt.id === state.base ? ' active' : '');
+    btn.id = `base-${opt.id}`;
+    btn.onclick = () => selectBase(opt.id, btn);
+    
+    let priceText = opt.price === 0 ? 'Входит в стоимость' : `+${opt.price.toLocaleString('ru-RU')} ₽`;
+    if (opt.note) priceText += ' ' + opt.note;
+    
+    btn.innerHTML = `<span class="base-name">${opt.name}</span><span class="base-price">${priceText}</span>`;
+    container.appendChild(btn);
+  });
+}
+
+function selectBase(id, btnElement) {
+  state.base = id;
+  document.querySelectorAll('.base-btn').forEach(b => b.classList.remove('active'));
+  if(btnElement) btnElement.classList.add('active');
+  
+  const opt = BASE_OPTIONS.find(o => o.id === id);
+  let displayText = opt.name;
+  if (opt.price > 0) displayText += ` (+${opt.price.toLocaleString('ru-RU')} ₽)`;
+  document.getElementById('sum-base').textContent = displayText;
+  
+  updateSummary();
 }
 
 function selectMaterial(id) {
@@ -487,6 +544,8 @@ function updateSummary() {
   const matData = DATA[state.mat];
   const fabricPrice = matData.price;
   const bedPrice = getBedPrice();
+  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
+  const basePrice = baseOpt ? baseOpt.price : 0;
   
   // Обновляем подсказку под размером
   const hintEl = document.getElementById('size-price-hint');
@@ -507,7 +566,7 @@ function updateSummary() {
   if (bedPrice === null) {
     totalEl.textContent = 'Индивидуально';
   } else {
-    const total = bedPrice + fabricPrice;
+    const total = bedPrice + fabricPrice + basePrice;
     totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
   }
 }
@@ -535,9 +594,11 @@ async function sendOrder() {
   const comment = document.getElementById('f-comment').value;
   const bedPrice = getBedPrice();
   const fabricPrice = matData.price;
-  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice : null;
+  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
+  const basePrice = baseOpt ? baseOpt.price : 0;
+  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice + basePrice : null;
   
-  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
+  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Основание: ${baseOpt.name}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за основание: ${basePrice > 0 ? '+' + basePrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
   
   if (totalPrice !== null) {
     text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
@@ -564,3 +625,4 @@ init();
 </script>
 </body>
 </html>
+
