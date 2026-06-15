@@ -166,10 +166,10 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ЦЕНЫ НА ИЗГОЛОВЬЯ (БАЗОВАЯ ЦЕНА В СТАНДАРТНОМ ВЕЛЮРЕ)
+// ЦЕНЫ НА ИЗГОЛОВЬЯ
 // ==========================================
 const HEADBOARD_PRICES = {
-  'Стандарт': { small: 16000, large: 17500 }, // <=160x200 / 180x200
+  'Стандарт': { small: 16000, large: 17500 },
   'Каретная стяжка (пуговицы/стразы)': { small: 21000, large: 22500 },
   'Геометрия': { small: 18000, large: 19500 },
   'Заборчики': { small: 18000, large: 19500 },
@@ -177,86 +177,86 @@ const HEADBOARD_PRICES = {
   'Дольки 8 штук': { small: 18000, large: 19500 },
   'Облачко': { small: 18000, large: 19500 },
   'Облачко более закругленное': { small: 18000, large: 19500 },
-  'Детские кровати': { small: null, large: null } // Индивидуально
+  'Детские кровати': { small: null, large: null }
 };
 
-// Размеры, которые считаются "большими" (180x200)
 const LARGE_SIZES = ['180x200'];
 
 // ==========================================
-// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
+// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ (с ?v=2 для сброса кэша)
 // ==========================================
+const V = '?v=2';
 const HB_GEOMETRY = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.09.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10%20(1).jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.09.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10%20(1).jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.10.jpeg' + V
 ];
 const HB_STANDARD = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.47.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.48.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.49.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.50.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.51.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.52.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.53.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.47.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.48.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.49.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.50.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.51.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.52.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.53.jpeg' + V
 ];
 const HB_FENCE = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.47.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.49.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.52.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.53.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54%20(1).jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.47.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.49.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.52.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.53.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54%20(1).jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54.jpeg' + V
 ];
 const HB_SLICES_6 = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.12.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.08.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.06.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.05.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.04.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.03.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.12.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.08.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.06.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.05.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.04.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.03.jpeg' + V
 ];
 const HB_SLICES_8 = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.31.48.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.34.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.36.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.37.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.31.48.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.34.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.36.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.37.jpeg' + V
 ];
 const HB_CAPITONE = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.29.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.30.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.34.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.33.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.32.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.36.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.39.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.40.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.29.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.30.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.34.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.33.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.32.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.36.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.39.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.40.jpeg' + V
 ];
 const HB_KIDS = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.34.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.36.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.40.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.42.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.44.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.47.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.56.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.34.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.36.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.40.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.42.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.44.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.47.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.56.jpeg' + V
 ];
 const HB_CLOUD = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.14.59.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.00.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.01.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.02.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.03.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.05.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.06.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.14.59.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.00.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.01.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.02.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.03.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.05.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.06.jpeg' + V
 ];
 const HB_CLOUD_ROUND = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.56.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.54.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.53.jpeg',
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.50.jpeg'
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.56.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.54.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.53.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.50.jpeg' + V
 ];
 
 const DESIGNS_WITH_PHOTOS = {
@@ -269,16 +269,16 @@ const DESIGNS_WITH_PHOTOS = {
 const ALL_DESIGNS = Object.keys(DESIGNS_WITH_PHOTOS);
 
 // ==========================================
-// ФОТО ТКАНЕЙ
+// ФОТО ТКАНЕЙ (с ?v=2 для сброса кэша)
 // ==========================================
-const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg';
-const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg';
-const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg';
-const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg';
-const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg';
-const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg';
-const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg';
-const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg';
+const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg' + V;
+const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg' + V;
+const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg' + V;
+const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg' + V;
+const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg' + V;
+const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg' + V;
+const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg' + V;
+const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg' + V;
 
 const DATA = {
   relax: {
