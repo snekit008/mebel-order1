@@ -95,7 +95,7 @@
 
 <div class="container" id="app">
   
-  <!-- 1. Размер (ПЕРВЫЙ) -->
+  <!-- 1. Размер -->
   <div class="card" id="card-size">
     <div class="card-title">1. Размер спального места</div>
     <div class="field">
@@ -111,7 +111,7 @@
     <div style="font-size: 0.85rem; color: var(--muted); margin-top: 5px;" id="size-price-hint"></div>
   </div>
 
-  <!-- 2. Дизайн изголовья (ВТОРОЙ) -->
+  <!-- 2. Дизайн изголовья -->
   <div class="card" id="card-design">
     <div class="card-title">2. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
@@ -122,19 +122,19 @@
     </div>
   </div>
 
-  <!-- 3. Комплектация основания (ТРЕТИЙ) -->
+  <!-- 3. Комплектация основания -->
   <div class="card" id="card-base">
     <div class="card-title">3. Комплектация основания</div>
     <div class="base-list" id="base-list"></div>
   </div>
 
-  <!-- 4. Материал (ЧЕТВЕРТЫЙ) -->
+  <!-- 4. Материал -->
   <div class="card" id="card-material">
     <div class="card-title">4. Выберите материал</div>
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 5. Цвет ткани (ПЯТЫЙ, ВСЕГДА ВИДЕН) -->
+  <!-- 5. Цвет ткани (ВСЕГДА ВИДЕН) -->
   <div class="card" id="card-color">
     <div class="card-title">5. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
@@ -142,7 +142,7 @@
     <div class="color-list" id="color-list"></div>
   </div>
 
-  <!-- 6. Контакты (ШЕСТОЙ) -->
+  <!-- 6. Контакты -->
   <div class="card" id="card-contact">
     <div class="card-title">6. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
@@ -154,7 +154,7 @@
   <div class="summary">
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
     <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Не выбрано</span></div>
-    <div class="sum-row"><span>Основание:</span> <span id="sum-base">Щитовое (входит в стоимость)</span></div>
+    <div class="sum-row"><span>Основание:</span> <span id="sum-base">Щитовое (бесплатно)</span></div>
     <div class="sum-row"><span>Материал:</span> <span id="sum-mat">-</span></div>
     <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Стоимость кровати:</span> <span id="sum-bed-price">-</span></div>
@@ -202,20 +202,49 @@ const HEADBOARD_PRICES = {
 const LARGE_SIZES = ['180x200'];
 
 // ==========================================
+// ФОТО ОСНОВАНИЙ
+// ==========================================
+const V = '?v=7';
+const BASE_SHIELD = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.40.48.jpeg' + V;
+const DRAWER_1 = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.09.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.17.jpeg' + V
+];
+const DRAWER_2 = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.14.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.16.jpeg' + V
+];
+const DRAWER_3 = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.20.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.21.jpeg' + V
+];
+const DRAWER_4 = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.18.jpeg' + V,
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.19.jpeg' + V
+];
+const BASE_ORTHO = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.49.19.jpeg' + V;
+const BASE_LIFT = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.32.jpeg' + V;
+const BASE_LIFT_HALF = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.27.jpeg' + V;
+const BASE_LIFT_FULL = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2014.59.30.jpeg' + V;
+
+// ==========================================
 // ВАРИАНТЫ ОСНОВАНИЯ
 // ==========================================
 const BASE_OPTIONS = [
-  { id: 'shield', name: 'Щитовое основание', price: 0, note: '(входит в стоимость)' },
-  { id: 'ortho', name: 'Ортопедическое на ножках', price: 3000, note: '' },
-  { id: 'lift', name: 'С подъемным механизмом (ортопед.)', price: 9000, note: '' },
-  { id: 'lift-half', name: 'С подъемным + отсек на полкровати', price: 10000, note: '' },
-  { id: 'lift-full', name: 'С подъемным + отсек на всю кровать', price: 11000, note: '' }
+  { id: 'shield', name: 'Щитовое основание', price: 0, note: '(бесплатно)', img: BASE_SHIELD },
+  { id: 'drawer1', name: 'Щитовое + 1 выдвижной ящик', price: 3000, note: '', img: DRAWER_1 },
+  { id: 'drawer2', name: 'Щитовое + 2 выдвижных ящика', price: 6000, note: '', img: DRAWER_2 },
+  { id: 'drawer3', name: 'Щитовое + 3 выдвижных ящика', price: 9000, note: '', img: DRAWER_3 },
+  { id: 'drawer4', name: 'Щитовое + 4 выдвижных ящика', price: 12000, note: '', img: DRAWER_4 },
+  { id: 'ortho', name: 'Ортопедическое основание', price: 3000, note: '', img: BASE_ORTHO },
+  { id: 'lift', name: 'С подъемным механизмом (ортопед.)', price: 9000, note: '', img: BASE_LIFT },
+  { id: 'lift-half', name: 'С подъемным + отсек на полкровати', price: 10000, note: '', img: BASE_LIFT_HALF },
+  { id: 'lift-full', name: 'С подъемным + отсек на всю кровать', price: 11000, note: '', img: BASE_LIFT_FULL }
 ];
 
 // ==========================================
 // ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const V = '?v=6'; // Версия для сброса кэша
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
@@ -446,7 +475,7 @@ function renderBaseOptions() {
     btn.id = `base-${opt.id}`;
     btn.onclick = () => selectBase(opt.id, btn);
     
-    let priceText = opt.price === 0 ? 'Входит в стоимость' : `+${opt.price.toLocaleString('ru-RU')} ₽`;
+    let priceText = opt.price === 0 ? 'Бесплатно' : `+${opt.price.toLocaleString('ru-RU')} ₽`;
     if (opt.note) priceText += ' ' + opt.note;
     
     btn.innerHTML = `<span class="base-name">${opt.name}</span><span class="base-price">${priceText}</span>`;
@@ -464,7 +493,40 @@ function selectBase(id, btnElement) {
   if (opt.price > 0) displayText += ` (+${opt.price.toLocaleString('ru-RU')} ₽)`;
   document.getElementById('sum-base').textContent = displayText;
   
+  // Показываем галерею выбранного основания
+  showBaseGallery(opt);
+  
   updateSummary();
+}
+
+function showBaseGallery(opt) {
+  // Создаем временную галерею для основания прямо под кнопками
+  let galleryEl = document.getElementById('base-gallery');
+  if (!galleryEl) {
+    galleryEl = document.createElement('div');
+    galleryEl.id = 'base-gallery';
+    galleryEl.className = 'headboard-gallery';
+    galleryEl.style.marginTop = '15px';
+    document.getElementById('card-base').appendChild(galleryEl);
+  }
+  
+  galleryEl.innerHTML = '';
+  
+  if (!opt.img) {
+    galleryEl.style.display = 'none';
+    return;
+  }
+  
+  galleryEl.style.display = 'grid';
+  const images = Array.isArray(opt.img) ? opt.img : [opt.img];
+  
+  images.forEach((src, index) => {
+    const item = document.createElement('div');
+    item.className = 'hb-item';
+    item.innerHTML = `<img src="${src}" class="hb-img" loading="lazy">`;
+    item.onclick = () => openZoom(src);
+    galleryEl.appendChild(item);
+  });
 }
 
 function selectMaterial(id) {
@@ -529,102 +591,8 @@ function getBedPrice() {
   const prices = HEADBOARD_PRICES[state.design];
   if (prices.small === null) return null; // Детские кровати
   
-  const isLarge = LARGE_SIZES.includes(state.size);
-  return isLarge ? prices.large : prices.small;
-}
+ Вот полностью обновленный код. Я добавил все фото для оснований, исправил тексты («Бесплатно» вместо «входит в стоимость», убрал «на ножках») и добавил 4 варианта выдвижных ящиков с правильными ценами и фото.
 
-function formatPrice(price) {
-  if (price === null) return 'Индивидуально';
-  return price.toLocaleString('ru-RU') + ' ₽';
-}
+Скопируйте этот код целиком в `index.html`:
 
-function updateSummary() {
-  state.size = document.getElementById('size-select').value;
-  document.getElementById('sum-size').textContent = state.size;
-  
-  const matData = DATA[state.mat];
-  const fabricPrice = matData.price;
-  const bedPrice = getBedPrice();
-  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
-  const basePrice = baseOpt ? baseOpt.price : 0;
-  
-  // Обновляем подсказку под размером
-  const hintEl = document.getElementById('size-price-hint');
-  if (bedPrice !== null) {
-    hintEl.textContent = `Базовая цена (${state.design || '...'}): ${formatPrice(bedPrice)}`;
-  } else if (state.design === 'Детские кровати') {
-    hintEl.textContent = 'Цена рассчитывается индивидуально';
-  } else {
-    hintEl.textContent = 'Выберите дизайн изголовья для расчета цены';
-  }
-  
-  // Обновляем сводку
-  document.getElementById('sum-bed-price').textContent = formatPrice(bedPrice);
-  document.getElementById('sum-base-price').textContent = basePrice > 0 ? `+${basePrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
-  document.getElementById('sum-fabric-price').textContent = fabricPrice > 0 ? `+${fabricPrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
-  
-  // Итого
-  const totalEl = document.getElementById('sum-total');
-  if (bedPrice === null) {
-    totalEl.textContent = 'Индивидуально';
-  } else {
-    const total = bedPrice + fabricPrice + basePrice;
-    totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
-  }
-}
-
-function openZoom(imgSrc) {
-  const modal = document.getElementById('zoom-modal');
-  document.getElementById('zoom-img').src = imgSrc;
-  modal.style.display = 'flex';
-}
-
-function closeZoom() {
-  document.getElementById('zoom-modal').style.display = 'none';
-}
-
-async function sendOrder() {
-  const name = document.getElementById('f-name').value;
-  const phone = document.getElementById('f-phone').value;
-  if(!name || !phone) { alert('Заполните Имя и Телефон'); return; }
-  if(!state.design) { alert('Выберите дизайн изголовья'); return; }
-  
-  const btn = document.getElementById('btn-send');
-  btn.disabled = true; btn.textContent = 'Отправка...';
-  
-  const matData = DATA[state.mat];
-  const comment = document.getElementById('f-comment').value;
-  const bedPrice = getBedPrice();
-  const fabricPrice = matData.price;
-  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
-  const basePrice = baseOpt ? baseOpt.price : 0;
-  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice + basePrice : null;
-  
-  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Основание: ${baseOpt.name}\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за основание: ${basePrice > 0 ? '+' + basePrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
-  
-  if (totalPrice !== null) {
-    text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
-  } else {
-    text += `💰 *ИТОГО: Рассчитывается индивидуально*\n`;
-  }
-  
-  text += `\n💬 *Коммент:* ${comment || 'Нет'}`;
-  
-  try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
-    });
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-  } catch(e) {
-    alert('Ошибка отправки.');
-    btn.disabled = false; btn.textContent = 'Отправить заказ';
-  }
-}
-
-init();
-</script>
-</body>
-</html>
 
