@@ -54,7 +54,6 @@
   .hb-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 3px solid transparent; cursor: pointer; position: relative; background: #eee; }
   .hb-item.active { border-color: var(--accent); transform: scale(0.95); }
   .hb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .hb-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--tag-bg); color: var(--muted); font-size: 0.8rem; text-align: center; padding: 10px; border-radius: 8px; }
 
   /* Поля ввода */
   .field { margin-bottom: 15px; }
@@ -163,7 +162,7 @@ const BOT_TOKEN = '8879313422:AAETp06ReVN5wGaN610cossDKckQm5818tI';
 const CHAT_ID = '5210823670';
 
 // ==========================================
-// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
+// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ (ВСЕ ССЫЛКИ)
 // ==========================================
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg',
@@ -208,22 +207,58 @@ const HB_SLICES_8 = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.37.jpeg'
 ];
 
-// Дизайны с фото
+const HB_CAPITONE = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.29.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.30.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.34.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.33.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.32.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.36.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.39.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.40.jpeg'
+];
+
+const HB_KIDS = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.34.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.36.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.40.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.42.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.44.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.47.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.56.jpeg'
+];
+
+const HB_CLOUD = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.14.59.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.00.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.01.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.02.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.03.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.05.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.06.jpeg'
+];
+
+const HB_CLOUD_ROUND = [
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.56.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.54.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.53.jpeg',
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.50.jpeg'
+];
+
+// Маппинг названий на массивы фото
 const DESIGNS_WITH_PHOTOS = {
   'Геометрия': HB_GEOMETRY,
   'Стандарт': HB_STANDARD,
   'Заборчики': HB_FENCE,
   'Дольки 6 штук': HB_SLICES_6,
-  'Дольки 8 штук': HB_SLICES_8
+  'Дольки 8 штук': HB_SLICES_8,
+  'Каретная стяжка (пуговицы/стразы)': HB_CAPITONE,
+  'Детские кровати': HB_KIDS,
+  'Облачко': HB_CLOUD,
+  'Облачко более закругленное': HB_CLOUD_ROUND
 };
 
-// Все доступные дизайны
-const ALL_DESIGNS = [
-  'Геометрия', 'Стандарт', 'Заборчики', 
-  'Дольки 6 штук', 'Дольки 8 штук', 
-  'Каретная стяжка (пуговицы/стразы)', 
-  'Детские кровати', 'Облачко', 'Облачко более закругленное'
-];
+const ALL_DESIGNS = Object.keys(DESIGNS_WITH_PHOTOS);
 
 // ==========================================
 // ФОТО ТКАНЕЙ
@@ -327,16 +362,18 @@ function selectDesign(name, btnElement) {
   document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('active'));
   if(btnElement) btnElement.classList.add('active');
   
-  const hasPhotos = DESIGNS_WITH_PHOTOS[name];
+  const photos = DESIGNS_WITH_PHOTOS[name];
   const hbView = document.getElementById('headboard-view');
   const colorCard = document.getElementById('card-color');
   
-  if (hasPhotos) {
+  if (photos && photos.length > 0) {
+    // Есть фото -> показываем галерею, скрываем выбор цвета
     hbView.style.display = 'block';
     colorCard.classList.remove('visible');
-    renderHeadboardGallery(name, hasPhotos);
+    renderHeadboardGallery(name, photos);
     document.getElementById('sum-design').textContent = name + ' (выберите фото)';
   } else {
+    // Нет фото -> показываем выбор цвета
     hbView.style.display = 'none';
     colorCard.classList.add('visible');
     document.getElementById('sum-design').textContent = name;
