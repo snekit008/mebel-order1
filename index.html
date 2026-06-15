@@ -95,23 +95,9 @@
 
 <div class="container" id="app">
   
-  <!-- 1. Материал -->
-  <div class="card" id="card-material">
-    <div class="card-title">1. Выберите материал</div>
-    <div class="mat-list" id="mat-list"></div>
-  </div>
-
-  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН) -->
-  <div class="card" id="card-color">
-    <div class="card-title">2. Выберите цвет обивки</div>
-    <div class="color-grid" id="color-grid"></div>
-    <div class="color-name" id="selected-color-name">Выберите цвет</div>
-    <div class="color-list" id="color-list"></div>
-  </div>
-
-  <!-- 3. Размер -->
+  <!-- 1. Размер (ПЕРВЫЙ) -->
   <div class="card" id="card-size">
-    <div class="card-title">3. Размер спального места</div>
+    <div class="card-title">1. Размер спального места</div>
     <div class="field">
       <select id="size-select" onchange="updateSummary()" style="font-size: 0.95rem;">
         <option value="80x200">80 x 200 см</option>
@@ -125,9 +111,9 @@
     <div style="font-size: 0.85rem; color: var(--muted); margin-top: 5px;" id="size-price-hint"></div>
   </div>
 
-  <!-- 4. Дизайн изголовья -->
+  <!-- 2. Дизайн изголовья (ВТОРОЙ) -->
   <div class="card" id="card-design">
-    <div class="card-title">4. Дизайн изголовья</div>
+    <div class="card-title">2. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
     
     <div id="headboard-view" style="display:none;">
@@ -136,13 +122,27 @@
     </div>
   </div>
 
-  <!-- 5. Комплектация основания (НОВЫЙ БЛОК) -->
+  <!-- 3. Комплектация основания (ТРЕТИЙ) -->
   <div class="card" id="card-base">
-    <div class="card-title">5. Комплектация основания</div>
+    <div class="card-title">3. Комплектация основания</div>
     <div class="base-list" id="base-list"></div>
   </div>
 
-  <!-- 6. Контакты -->
+  <!-- 4. Материал (ЧЕТВЕРТЫЙ) -->
+  <div class="card" id="card-material">
+    <div class="card-title">4. Выберите материал</div>
+    <div class="mat-list" id="mat-list"></div>
+  </div>
+
+  <!-- 5. Цвет ткани (ПЯТЫЙ, ВСЕГДА ВИДЕН) -->
+  <div class="card" id="card-color">
+    <div class="card-title">5. Выберите цвет обивки</div>
+    <div class="color-grid" id="color-grid"></div>
+    <div class="color-name" id="selected-color-name">Выберите цвет</div>
+    <div class="color-list" id="color-list"></div>
+  </div>
+
+  <!-- 6. Контакты (ШЕСТОЙ) -->
   <div class="card" id="card-contact">
     <div class="card-title">6. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
@@ -152,12 +152,13 @@
 
   <!-- Итог -->
   <div class="summary">
-    <div class="sum-row"><span>Материал:</span> <span id="sum-mat">-</span></div>
-    <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Размер:</span> <span id="sum-size">140x200</span></div>
     <div class="sum-row"><span>Изголовье:</span> <span id="sum-design">Не выбрано</span></div>
     <div class="sum-row"><span>Основание:</span> <span id="sum-base">Щитовое (входит в стоимость)</span></div>
+    <div class="sum-row"><span>Материал:</span> <span id="sum-mat">-</span></div>
+    <div class="sum-row"><span>Цвет:</span> <span id="sum-color">-</span></div>
     <div class="sum-row"><span>Стоимость кровати:</span> <span id="sum-bed-price">-</span></div>
+    <div class="sum-row"><span>Доплата за основание:</span> <span id="sum-base-price">0 ₽</span></div>
     <div class="sum-row"><span>Доплата за ткань:</span> <span id="sum-fabric-price">0 ₽</span></div>
     <div class="sum-row total"><span>ИТОГО:</span> <span id="sum-total">-</span></div>
   </div>
@@ -214,7 +215,7 @@ const BASE_OPTIONS = [
 // ==========================================
 // ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const V = '?v=5'; // Версия для сброса кэша
+const V = '?v=6'; // Версия для сброса кэша
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
@@ -559,6 +560,7 @@ function updateSummary() {
   
   // Обновляем сводку
   document.getElementById('sum-bed-price').textContent = formatPrice(bedPrice);
+  document.getElementById('sum-base-price').textContent = basePrice > 0 ? `+${basePrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
   document.getElementById('sum-fabric-price').textContent = fabricPrice > 0 ? `+${fabricPrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
   
   // Итого
@@ -598,7 +600,7 @@ async function sendOrder() {
   const basePrice = baseOpt ? baseOpt.price : 0;
   const totalPrice = bedPrice !== null ? bedPrice + fabricPrice + basePrice : null;
   
-  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Основание: ${baseOpt.name}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за основание: ${basePrice > 0 ? '+' + basePrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
+  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Основание: ${baseOpt.name}\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за основание: ${basePrice > 0 ? '+' + basePrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
   
   if (totalPrice !== null) {
     text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
