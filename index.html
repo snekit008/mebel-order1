@@ -126,6 +126,7 @@
   <div class="card" id="card-base">
     <div class="card-title">3. Комплектация основания</div>
     <div class="base-list" id="base-list"></div>
+    <!-- Галерея для выбранного основания будет добавлена сюда через JS -->
   </div>
 
   <!-- 4. Материал -->
@@ -591,8 +592,101 @@ function getBedPrice() {
   const prices = HEADBOARD_PRICES[state.design];
   if (prices.small === null) return null; // Детские кровати
   
- Вот полностью обновленный код. Я добавил все фото для оснований, исправил тексты («Бесплатно» вместо «входит в стоимость», убрал «на ножках») и добавил 4 варианта выдвижных ящиков с правильными ценами и фото.
+  const isLarge = LARGE_SIZES.includes(state.size);
+  return isLarge ? prices.large : prices.small;
+}
 
-Скопируйте этот код целиком в `index.html`:
+function formatPrice(price) {
+  if (price === null) return 'Индивидуально';
+  return price.toLocaleString('ru-RU') + ' ₽';
+}
 
+function updateSummary() {
+  state.size = document.getElementById('size-select').value;
+  document.getElementById('sum-size').textContent = state.size;
+  
+  const matData = DATA[state.mat];
+  const fabricPrice = matData.price;
+  const bedPrice = getBedPrice();
+  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
+  const basePrice = baseOpt ? baseOpt.price : 0;
+  
+  // Обновляем подсказку под размером
+  const hintEl = document.getElementById('size-price-hint');
+  if (bedPrice !== null) {
+    hintEl.textContent = `Базовая цена (${state.design || '...'}): ${formatPrice(bedPrice)}`;
+  } else if (state.design === 'Детские кровати') {
+    hintEl.textContent = 'Цена рассчитывается индивидуально';
+  } else {
+    hintEl.textContent = 'Выберите дизайн изголовья для расчета цены';
+  }
+  
+  // Обновляем сводку
+  document.getElementById('sum-bed-price').textContent = formatPrice(bedPrice);
+  document.getElementById('sum-base-price').textContent = basePrice > 0 ? `+${basePrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
+  document.getElementById('sum-fabric-price').textContent = fabricPrice > 0 ? `+${fabricPrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
+  
+  // Итого
+  const totalEl = document.getElementById('sum-total');
+  if (bedPrice === null) {
+    totalEl.textContent = 'Индивидуально';
+  } else {
+    const total = bedPrice + fabricPrice + basePrice;
+    totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+  }
+}
 
+function openZoom(imgSrc) {
+  const modal = document.getElementById('zoom-modal');
+  document.getElementById('zoom-img').src = imgSrc;
+  modal.style.display = 'flex';
+}
+
+function closeZoom() {
+  document.getElementById('zoom-modal').style.display = 'none';
+}
+
+async function sendOrder() {
+  const name = document.getElementById('f-name').value;
+  const phone = document.getElementById('f-phone').value;
+  if(!name || !phone) { alert('Заполните Имя и Телефон'); return; }
+  if(!state.design) { alert('Выберите дизайн изголовья'); return; }
+  
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true; btn.textContent = 'Отправка...';
+  
+  const matData = DATA[state.mat];
+  const comment = document.getElementById('f-comment').value;
+  const bedPrice = getBedPrice();
+  const fabricPrice = matData.price;
+  const baseOpt = BASE_OPTIONS.find(o => o.id === state.base);
+  const basePrice = baseOpt ? baseOpt.price : 0;
+  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice + basePrice : null;
+  
+  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Основание: ${baseOpt.name}\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за основание: ${basePrice > 0 ? '+' + basePrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
+  
+  if (totalPrice !== null) {
+    text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
+  } else {
+    text += `💰 *ИТОГО: Рассчитывается индивидуально*\n`;
+  }
+  
+  text += `\n💬 *Коммент:* ${comment || 'Нет'}`;
+  
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
+    });
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+  } catch(e) {
+    alert('Ошибка отправки.');
+    btn.disabled = false; btn.textContent = 'Отправить заказ';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
