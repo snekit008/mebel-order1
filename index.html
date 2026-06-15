@@ -49,7 +49,7 @@
   .design-btn.active { border-color: var(--accent); background: var(--tag-bg); font-weight: 600; color: var(--accent); }
 
   /* Галерея изголовий */
-  .headboard-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .headboard-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
   @media(min-width: 480px) { .headboard-gallery { grid-template-columns: repeat(3, 1fr); } }
   .hb-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 3px solid transparent; cursor: pointer; position: relative; background: #eee; }
   .hb-item.active { border-color: var(--accent); transform: scale(0.95); }
@@ -90,7 +90,7 @@
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 2. Цвет ткани -->
+  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН) -->
   <div class="card visible" id="card-color">
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
@@ -119,6 +119,7 @@
     <div class="card-title">4. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
     
+    <!-- Галерея появляется ЗДЕСЬ, под кнопками, но НЕ заменяет цвет -->
     <div id="headboard-view" style="display:none;">
       <div class="headboard-gallery" id="hb-gallery"></div>
       <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-hb-name">Выберите вариант</div>
@@ -183,9 +184,9 @@ const HEADBOARD_PRICES = {
 const LARGE_SIZES = ['180x200'];
 
 // ==========================================
-// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ (с ?v=2 для сброса кэша)
+// ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const V = '?v=2';
+const V = '?v=3'; // Версия для сброса кэша
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
@@ -269,7 +270,7 @@ const DESIGNS_WITH_PHOTOS = {
 const ALL_DESIGNS = Object.keys(DESIGNS_WITH_PHOTOS);
 
 // ==========================================
-// ФОТО ТКАНЕЙ (с ?v=2 для сброса кэша)
+// ФОТО ТКАНЕЙ
 // ==========================================
 const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg' + V;
 const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg' + V;
@@ -373,16 +374,15 @@ function selectDesign(name, btnElement) {
   
   const photos = DESIGNS_WITH_PHOTOS[name];
   const hbView = document.getElementById('headboard-view');
-  const colorCard = document.getElementById('card-color');
   
+  // ВАЖНОЕ ИЗМЕНЕНИЕ: Больше не трогаем card-color!
+  // Просто показываем или скрываем галерею изголовья
   if (photos && photos.length > 0) {
     hbView.style.display = 'block';
-    colorCard.classList.remove('visible');
     renderHeadboardGallery(name, photos);
     document.getElementById('sum-design').textContent = name + ' (выберите фото)';
   } else {
     hbView.style.display = 'none';
-    colorCard.classList.add('visible');
     document.getElementById('sum-design').textContent = name;
   }
   updateSummary();
