@@ -13,8 +13,7 @@
   .container { max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem; }
   
   /* Карточки */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: none; }
-  .card.visible { display: block; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; display: block; } /* ВСЕГДА BLOCK */
   .card-title { font-size: .8rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; letter-spacing: 0.05em; }
   
   /* Материалы */
@@ -63,7 +62,7 @@
   /* Итог */
   .summary { background: var(--tag-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
   .sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-  .sum-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--accent); font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+  .sum-row.total { margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--accent); font-size: 1.3rem; font-weight: 900; color: var(--accent); }
   .sum-row:last-child:not(.total) { margin-bottom: 0; font-weight: bold; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; }
   
   .btn-submit { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
@@ -85,13 +84,13 @@
 <div class="container" id="app">
   
   <!-- 1. Материал -->
-  <div class="card visible" id="card-material">
+  <div class="card" id="card-material">
     <div class="card-title">1. Выберите материал</div>
     <div class="mat-list" id="mat-list"></div>
   </div>
 
-  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН) -->
-  <div class="card visible" id="card-color">
+  <!-- 2. Цвет ткани (ВСЕГДА ВИДЕН, НЕ СКРЫВАЕТСЯ) -->
+  <div class="card" id="card-color">
     <div class="card-title">2. Выберите цвет обивки</div>
     <div class="color-grid" id="color-grid"></div>
     <div class="color-name" id="selected-color-name">Выберите цвет</div>
@@ -99,10 +98,11 @@
   </div>
 
   <!-- 3. Размер -->
-  <div class="card visible" id="card-size">
+  <div class="card" id="card-size">
     <div class="card-title">3. Размер спального места</div>
     <div class="field">
-      <select id="size-select" onchange="updateSummary()">
+      <!-- Уменьшенный шрифт для селекта через style -->
+      <select id="size-select" onchange="updateSummary()" style="font-size: 0.95rem;">
         <option value="80x200">80 x 200 см</option>
         <option value="90x200">90 x 200 см</option>
         <option value="120x200">120 x 200 см</option>
@@ -111,15 +111,15 @@
         <option value="180x200">180 x 200 см</option>
       </select>
     </div>
-    <div style="font-size: 0.9rem; color: var(--muted); margin-top: 5px;" id="size-price-hint"></div>
+    <div style="font-size: 0.85rem; color: var(--muted); margin-top: 5px;" id="size-price-hint"></div>
   </div>
 
   <!-- 4. Дизайн изголовья -->
-  <div class="card visible" id="card-design">
+  <div class="card" id="card-design">
     <div class="card-title">4. Дизайн изголовья</div>
     <div class="design-grid" id="design-grid"></div>
     
-    <!-- Галерея появляется ЗДЕСЬ, под кнопками, но НЕ заменяет цвет -->
+    <!-- Галерея появляется ЗДЕСЬ, под кнопками -->
     <div id="headboard-view" style="display:none;">
       <div class="headboard-gallery" id="hb-gallery"></div>
       <div style="text-align:center; margin-top:10px; font-weight:600; color:var(--accent);" id="selected-hb-name">Выберите вариант</div>
@@ -127,7 +127,7 @@
   </div>
 
   <!-- 5. Контакты -->
-  <div class="card visible" id="card-contact">
+  <div class="card" id="card-contact">
     <div class="card-title">5. Ваши данные</div>
     <div class="field"><input type="text" id="f-name" placeholder="Ваше имя"></div>
     <div class="field"><input type="tel" id="f-phone" placeholder="+7 (999) 000-00-00"></div>
@@ -186,7 +186,7 @@ const LARGE_SIZES = ['180x200'];
 // ==========================================
 // ФОТО ДИЗАЙНОВ ИЗГОЛОВИЙ
 // ==========================================
-const V = '?v=3'; // Версия для сброса кэша
+const V = '?v=4'; // Версия для сброса кэша
 const HB_GEOMETRY = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.07.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2017.28.08.jpeg' + V,
@@ -208,359 +208,4 @@ const HB_FENCE = [
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.49.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.52.jpeg' + V,
   'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.53.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54%20(1).jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2018.14.54.jpeg' + V
-];
-const HB_SLICES_6 = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.12.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.08.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.06.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.05.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.04.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.27.03.jpeg' + V
-];
-const HB_SLICES_8 = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.31.48.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.34.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.36.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.32.37.jpeg' + V
-];
-const HB_CAPITONE = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.29.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.30.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.34.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.33.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.32.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.36.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.39.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2012.52.40.jpeg' + V
-];
-const HB_KIDS = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.34.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.36.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.40.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.42.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.44.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.47.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.08.56.jpeg' + V
-];
-const HB_CLOUD = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.14.59.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.00.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.01.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.02.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.03.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.05.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.15.06.jpeg' + V
-];
-const HB_CLOUD_ROUND = [
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.56.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.54.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.53.jpeg' + V,
-  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-15%2013.24.50.jpeg' + V
-];
-
-const DESIGNS_WITH_PHOTOS = {
-  'Геометрия': HB_GEOMETRY, 'Стандарт': HB_STANDARD, 'Заборчики': HB_FENCE,
-  'Дольки 6 штук': HB_SLICES_6, 'Дольки 8 штук': HB_SLICES_8,
-  'Каретная стяжка (пуговицы/стразы)': HB_CAPITONE,
-  'Детские кровати': HB_KIDS, 'Облачко': HB_CLOUD,
-  'Облачко более закругленное': HB_CLOUD_ROUND
-};
-const ALL_DESIGNS = Object.keys(DESIGNS_WITH_PHOTOS);
-
-// ==========================================
-// ФОТО ТКАНЕЙ
-// ==========================================
-const RELAX_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.10.jpeg' + V;
-const RELAX_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.12.jpeg' + V;
-const RELAX_3 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.13.jpeg' + V;
-const BELISIMMO_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.07.jpeg' + V;
-const BOSTON_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.04.jpeg' + V;
-const BOSTON_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.06.jpeg' + V;
-const BOUCLE_1 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.18.jpeg' + V;
-const BOUCLE_2 = 'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo_2026-06-14%2013.30.20.jpeg' + V;
-
-const DATA = {
-  relax: {
-    id: 'relax', name: 'Антивандальный (Relax)', price: 1000,
-    colors: [
-      { num: '30', name: 'Relax 30', img: RELAX_1 }, { num: '20', name: 'Relax 20', img: RELAX_1 },
-      { num: '35', name: 'Relax 35', img: RELAX_2 }, { num: '40', name: 'Relax 40', img: RELAX_2 },
-      { num: '50', name: 'Relax 50', img: RELAX_3 }, { num: '70', name: 'Relax 70', img: RELAX_3 },
-      { num: '75', name: 'Relax 75', img: RELAX_1 }, { num: '190', name: 'Relax 190', img: RELAX_2 },
-      { num: '180', name: 'Relax 180', img: RELAX_3 }, { num: '170', name: 'Relax 170', img: RELAX_1 },
-      { num: '140', name: 'Relax 140', img: RELAX_2 }, { num: '089', name: 'Relax 089', img: RELAX_3 },
-      { num: '145', name: 'Relax 145', img: RELAX_1 }, { num: '60', name: 'Relax 60', img: RELAX_2 },
-      { num: '61', name: 'Relax 61', img: RELAX_3 }, { num: '65', name: 'Relax 65', img: RELAX_1 },
-      { num: '63', name: 'Relax 63', img: RELAX_2 }
-    ]
-  },
-  velvet: {
-    id: 'velvet', name: 'Стандартный велюр', price: 0,
-    colors: [
-      { num: 'B-1', name: 'Belisimmo 1', img: BELISIMMO_1 }, { num: 'B-3', name: 'Belisimmo 3', img: BELISIMMO_1 },
-      { num: 'B-4', name: 'Belisimmo 4', img: BELISIMMO_1 }, { num: 'B-5', name: 'Belisimmo 5', img: BELISIMMO_1 },
-      { num: 'B-7', name: 'Belisimmo 7', img: BELISIMMO_1 }, { num: 'B-9', name: 'Belisimmo 9', img: BELISIMMO_1 },
-      { num: 'B-10', name: 'Belisimmo 10', img: BELISIMMO_1 }, { num: 'B-11', name: 'Belisimmo 11', img: BELISIMMO_1 },
-      { num: 'B-12', name: 'Belisimmo 12', img: BELISIMMO_1 }, { num: 'B-13', name: 'Belisimmo 13', img: BELISIMMO_1 },
-      { num: 'B-14', name: 'Belisimmo 14', img: BELISIMMO_1 }, { num: 'B-15', name: 'Belisimmo 15', img: BELISIMMO_1 },
-      { num: 'B-16', name: 'Belisimmo 16', img: BELISIMMO_1 }, { num: 'B-18', name: 'Belisimmo 18', img: BELISIMMO_1 },
-      { num: 'B-20', name: 'Belisimmo 20', img: BELISIMMO_1 }, { num: 'B-21', name: 'Belisimmo 21', img: BELISIMMO_1 },
-      { num: 'B-22', name: 'Belisimmo 22', img: BELISIMMO_1 }, { num: 'B-23', name: 'Belisimmo 23', img: BELISIMMO_1 },
-      { num: 'B-25', name: 'Belisimmo 25', img: BELISIMMO_1 }, { num: 'B-26', name: 'Belisimmo 26', img: BELISIMMO_1 },
-      { num: 'B-27', name: 'Belisimmo 27', img: BELISIMMO_1 }, { num: 'B-28', name: 'Belisimmo 28', img: BELISIMMO_1 },
-      { num: 'B-35', name: 'Belisimmo 35', img: BELISIMMO_1 },
-      { num: 'Bo-1', name: 'Boston 1', img: BOSTON_1 }, { num: 'Bo-2', name: 'Boston 2', img: BOSTON_2 },
-      { num: 'Bo-3', name: 'Boston 3', img: BOSTON_1 }, { num: 'Bo-4', name: 'Boston 4', img: BOSTON_2 },
-      { num: 'Bo-5', name: 'Boston 5', img: BOSTON_1 }, { num: 'Bo-6', name: 'Boston 6', img: BOSTON_2 },
-      { num: 'Bo-7', name: 'Boston 7', img: BOSTON_1 }, { num: 'Bo-8', name: 'Boston 8', img: BOSTON_2 },
-      { num: 'Bo-9', name: 'Boston 9', img: BOSTON_1 }, { num: 'Bo-10', name: 'Boston 10', img: BOSTON_2 },
-      { num: 'Bo-14', name: 'Boston 14', img: BOSTON_1 }, { num: 'Bo-15', name: 'Boston 15', img: BOSTON_2 },
-      { num: 'Bo-16', name: 'Boston 16', img: BOSTON_1 }, { num: 'Bo-17', name: 'Boston 17', img: BOSTON_2 },
-      { num: 'Bo-18', name: 'Boston 18', img: BOSTON_1 }, { num: 'Bo-19', name: 'Boston 19', img: BOSTON_2 },
-      { num: 'Bo-20', name: 'Boston 20', img: BOSTON_1 }, { num: 'Bo-21', name: 'Boston 21', img: BOSTON_2 }
-    ]
-  },
-  boucle: {
-    id: 'boucle', name: 'Букле (Teddy)', price: 2000,
-    colors: [
-      { num: '1', name: 'White', img: BOUCLE_1 }, { num: '2', name: 'Beige', img: BOUCLE_1 },
-      { num: '3', name: 'Brown', img: BOUCLE_2 }, { num: '4', name: 'Rust', img: BOUCLE_2 },
-      { num: '5', name: 'Rose', img: BOUCLE_1 }, { num: '6', name: 'Silver', img: BOUCLE_1 },
-      { num: '7', name: 'Storm', img: BOUCLE_2 }, { num: '8', name: 'Grey', img: BOUCLE_2 }
-    ]
-  }
-};
-
-let state = { mat: 'relax', colorName: '', size: '140x200', design: '' };
-
-function init() {
-  renderMaterials();
-  renderDesignButtons();
-  selectMaterial('relax');
-  updateSummary();
-}
-
-function renderMaterials() {
-  const container = document.getElementById('mat-list');
-  container.innerHTML = '';
-  Object.values(DATA).forEach(mat => {
-    const btn = document.createElement('div');
-    btn.className = 'mat-btn';
-    btn.id = `btn-${mat.id}`;
-    btn.onclick = () => selectMaterial(mat.id);
-    btn.innerHTML = `<span class="mat-name">${mat.name}</span><span class="mat-price">${mat.price > 0 ? '+' + mat.price + ' ₽' : 'Бесплатно'}</span>`;
-    container.appendChild(btn);
-  });
-}
-
-function renderDesignButtons() {
-  const grid = document.getElementById('design-grid');
-  grid.innerHTML = '';
-  ALL_DESIGNS.forEach(d => {
-    const btn = document.createElement('div');
-    btn.className = 'design-btn';
-    btn.textContent = d;
-    btn.onclick = () => selectDesign(d, btn);
-    grid.appendChild(btn);
-  });
-}
-
-function selectDesign(name, btnElement) {
-  state.design = name;
-  document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('active'));
-  if(btnElement) btnElement.classList.add('active');
-  
-  const photos = DESIGNS_WITH_PHOTOS[name];
-  const hbView = document.getElementById('headboard-view');
-  
-  // ВАЖНОЕ ИЗМЕНЕНИЕ: Больше не трогаем card-color!
-  // Просто показываем или скрываем галерею изголовья
-  if (photos && photos.length > 0) {
-    hbView.style.display = 'block';
-    renderHeadboardGallery(name, photos);
-    document.getElementById('sum-design').textContent = name + ' (выберите фото)';
-  } else {
-    hbView.style.display = 'none';
-    document.getElementById('sum-design').textContent = name;
-  }
-  updateSummary();
-}
-
-function renderHeadboardGallery(designName, photos) {
-  const gallery = document.getElementById('hb-gallery');
-  const nameDisplay = document.getElementById('selected-hb-name');
-  gallery.innerHTML = '';
-  
-  photos.forEach((src, index) => {
-    const item = document.createElement('div');
-    item.className = 'hb-item';
-    item.innerHTML = `<img src="${src}" class="hb-img" loading="lazy">`;
-    
-    item.onclick = () => {
-      openZoom(src);
-      document.querySelectorAll('.hb-item').forEach(el => el.classList.remove('active'));
-      item.classList.add('active');
-      nameDisplay.textContent = `${designName} - Вариант ${index + 1}`;
-      document.getElementById('sum-design').textContent = `${designName} (Вариант ${index + 1})`;
-    };
-    gallery.appendChild(item);
-  });
-}
-
-function selectMaterial(id) {
-  state.mat = id;
-  document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`btn-${id}`).classList.add('active');
-  const matData = DATA[id];
-  document.getElementById('sum-mat').textContent = matData.name;
-  renderColors(matData.colors);
-  updateSummary();
-}
-
-function renderColors(colors) {
-  const grid = document.getElementById('color-grid');
-  const list = document.getElementById('color-list');
-  grid.innerHTML = '';
-  list.innerHTML = '';
-  selectColor(`${colors[0].num} - ${colors[0].name}`);
-  
-  const uniqueImages = [...new Set(colors.map(c => c.img))].slice(0, 3);
-  uniqueImages.forEach((imgSrc, index) => {
-    const item = document.createElement('div');
-    item.className = 'color-item' + (index === 0 ? ' active' : '');
-    item.innerHTML = `<img src="${imgSrc}" class="color-img" alt="Color" loading="lazy">`;
-    item.onclick = () => {
-      openZoom(imgSrc);
-      document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-      item.classList.add('active');
-      const firstColorWithImg = colors.find(c => c.img === imgSrc);
-      if(firstColorWithImg) selectColor(`${firstColorWithImg.num} - ${firstColorWithImg.name}`);
-    };
-    grid.appendChild(item);
-  });
-  
-  colors.forEach((c, index) => {
-    const listItem = document.createElement('div');
-    listItem.className = 'color-list-item' + (index === 0 ? ' active' : '');
-    listItem.textContent = c.num.replace('B-', '').replace('Bo-', '');
-    listItem.onclick = (e) => {
-      e.stopPropagation();
-      document.querySelectorAll('.color-list-item').forEach(el => el.classList.remove('active'));
-      listItem.classList.add('active');
-      document.querySelectorAll('.color-item').forEach(el => el.classList.remove('active'));
-      selectColor(`${c.num} - ${c.name}`);
-    };
-    list.appendChild(listItem);
-  });
-}
-
-function selectColor(name) {
-  state.colorName = name;
-  document.getElementById('selected-color-name').textContent = name;
-  document.getElementById('sum-color').textContent = name;
-}
-
-// ==========================================
-// ЛОГИКА РАСЧЕТА ЦЕНЫ
-// ==========================================
-function getBedPrice() {
-  if (!state.design || !HEADBOARD_PRICES[state.design]) return null;
-  
-  const prices = HEADBOARD_PRICES[state.design];
-  if (prices.small === null) return null; // Детские кровати
-  
-  const isLarge = LARGE_SIZES.includes(state.size);
-  return isLarge ? prices.large : prices.small;
-}
-
-function formatPrice(price) {
-  if (price === null) return 'Индивидуально';
-  return price.toLocaleString('ru-RU') + ' ₽';
-}
-
-function updateSummary() {
-  state.size = document.getElementById('size-select').value;
-  document.getElementById('sum-size').textContent = state.size;
-  
-  const matData = DATA[state.mat];
-  const fabricPrice = matData.price;
-  const bedPrice = getBedPrice();
-  
-  // Обновляем подсказку под размером
-  const hintEl = document.getElementById('size-price-hint');
-  if (bedPrice !== null) {
-    hintEl.textContent = `Базовая цена (${state.design || '...'}): ${formatPrice(bedPrice)}`;
-  } else if (state.design === 'Детские кровати') {
-    hintEl.textContent = 'Цена рассчитывается индивидуально';
-  } else {
-    hintEl.textContent = 'Выберите дизайн изголовья для расчета цены';
-  }
-  
-  // Обновляем сводку
-  document.getElementById('sum-bed-price').textContent = formatPrice(bedPrice);
-  document.getElementById('sum-fabric-price').textContent = fabricPrice > 0 ? `+${fabricPrice.toLocaleString('ru-RU')} ₽` : '0 ₽';
-  
-  // Итого
-  const totalEl = document.getElementById('sum-total');
-  if (bedPrice === null) {
-    totalEl.textContent = 'Индивидуально';
-  } else {
-    const total = bedPrice + fabricPrice;
-    totalEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
-  }
-}
-
-function openZoom(imgSrc) {
-  const modal = document.getElementById('zoom-modal');
-  document.getElementById('zoom-img').src = imgSrc;
-  modal.style.display = 'flex';
-}
-
-function closeZoom() {
-  document.getElementById('zoom-modal').style.display = 'none';
-}
-
-async function sendOrder() {
-  const name = document.getElementById('f-name').value;
-  const phone = document.getElementById('f-phone').value;
-  if(!name || !phone) { alert('Заполните Имя и Телефон'); return; }
-  if(!state.design) { alert('Выберите дизайн изголовья'); return; }
-  
-  const btn = document.getElementById('btn-send');
-  btn.disabled = true; btn.textContent = 'Отправка...';
-  
-  const matData = DATA[state.mat];
-  const comment = document.getElementById('f-comment').value;
-  const bedPrice = getBedPrice();
-  const fabricPrice = matData.price;
-  const totalPrice = bedPrice !== null ? bedPrice + fabricPrice : null;
-  
-  let text = `🛏 *НОВЫЙ ЗАКАЗ*\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n\n📋 *Параметры:*\n• Материал: ${matData.name}\n• Цвет: ${state.colorName}\n• Размер: ${state.size}\n• Изголовье: ${state.design}\n• Стоимость кровати: ${formatPrice(bedPrice)}\n• Доплата за ткань: ${fabricPrice > 0 ? '+' + fabricPrice.toLocaleString('ru-RU') + ' ₽' : '0 ₽'}\n`;
-  
-  if (totalPrice !== null) {
-    text += `💰 *ИТОГО: ${totalPrice.toLocaleString('ru-RU')} ₽*\n`;
-  } else {
-    text += `💰 *ИТОГО: Рассчитывается индивидуально*\n`;
-  }
-  
-  text += `\n💬 *Коммент:* ${comment || 'Нет'}`;
-  
-  try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
-    });
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-  } catch(e) {
-    alert('Ошибка отправки.');
-    btn.disabled = false; btn.textContent = 'Отправить заказ';
-  }
-}
-
-init();
-</script>
-</body>
-</html>
+  'https://raw.githubusercontent.com/snekit008/mebel-order1/main/photo
